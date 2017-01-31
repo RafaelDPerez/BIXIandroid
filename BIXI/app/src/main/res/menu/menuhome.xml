@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/mybutton"
+        android:title="Buscar"
+        app:showAsAction="always"
+        android:icon="@drawable/file_find"
+        />
+
+    <item
+        android:id="@+id/logout"
+        android:title="Cerrar sesión"
+        />
+</menu>
