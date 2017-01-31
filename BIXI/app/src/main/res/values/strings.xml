@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">BIXI</string>
+    <string name="email">email</string>
+    <string name="contraseña">contraseña</string>
+    <string name="olvidoContrasena">¿Olvidó su contraseña?</string>
+    <string name="registrate">¿Eres nuevo? Regístrate</string>
+    <string name="recuperarMiContrasena">Recuperar mi contraseña</string>
+    <string name="graciasPorRegistrarse">Gracias por registrarse!</string>
+
+    <string name="facebook_app_id">1122908771165034</string>
+
+    <string name="twitter_key">	ni4yAt5lbMMGrxBa5zJYFBk7M</string>
+    <string name="twitter_secret">dGTVHaxzIHUhVZLcihBt5dd2l0xjPJc7qhVLRfit9C6eWknsLy</string>
+    <string name="title_activity_recuperar_contrasena">recuperarContrasena</string>
+    <string name="title_activity_add_user">AddUserActivity</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="error">ERROR</string>
+    <string name="error_passwordNotMatch">Las contraseñas no coinciden</string>
+</resources>

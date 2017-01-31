@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "79007340060",
+    "project_id": "firebase-bixi-app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:79007340060:android:30f54c93cde9475b",
+        "android_client_info": {
+          "package_name": "com.bixi.bixi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "79007340060-cs80mjtfimihrjnmv9qtbld1ja49pv81.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bixi.bixi",
+            "certificate_hash": "435E3F4A0096057A5E300B64E3DFE13E9854A5FA"
+          }
+        },
+        {
+          "client_id": "79007340060-h7f4tusegag1bumjar5uihlsft9tian1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrcIBlwP94Sf4S84dHFQLuXV4FaHIUHNY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

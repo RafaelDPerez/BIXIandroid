@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_recuperar_contrasena"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.bixi.bixi.bixi.basics.RecuperarContrasena"
+    android:background="@drawable/bixi_background"
+    tools:showIn="@layout/activity_recuperar_contrasena">
+
+
+    <TextView
+        android:text="@string/recuperarMiContrasena"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:layout_marginEnd="32dp"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="32dp"
+        android:layout_marginStart="32dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="54dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="52sp" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/editTextEmailRecuperarPass"
+        android:layout_marginTop="56dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="32dp"
+        android:layout_marginStart="32dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:textColorHint="@color/colorAccent"
+        android:backgroundTint="@color/colorAccent"
+        android:textColor="@color/colorAccent"
+        android:hint="@string/email"
+        android:layout_marginLeft="32dp" />
+
+    <ImageView
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        app:srcCompat="@drawable/chevron_right"
+        android:id="@+id/imgFinish"
+        android:layout_marginTop="54dp"
+        app:layout_constraintTop_toBottomOf="@+id/editTextEmailRecuperarPass"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp" />
+
+
+</android.support.constraint.ConstraintLayout>
