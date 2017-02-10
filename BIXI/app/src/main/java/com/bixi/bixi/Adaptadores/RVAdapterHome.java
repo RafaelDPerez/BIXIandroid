@@ -75,6 +75,7 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
             @Override
             public void onClick(View view) {
                 loadImage(holder.imageView,oferta.get(posi).getImages().get(2));
+
             }
         });
 
