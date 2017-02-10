@@ -69,7 +69,8 @@ public class HomeInteractorImpl implements HomeInteractor {
 
                 }else
                 {
-                    Log.e("Products Respuesta",response.body().getSceResponseMsg());
+                    if(response.body().getSceResponseMsg() != null)
+                        Log.e("Products Respuesta",response.body().getSceResponseMsg());
 //                    Log.e("Products Respuesta Code",response.body().getSceResponseCode());
                 }
             }
@@ -90,6 +91,23 @@ public class HomeInteractorImpl implements HomeInteractor {
         oferta.add(new Oferta("Oferta 3", "$400","http://static.viagrupo.com/thumbs/unnamed_17_JPG_464x464.jpg","Local 3","Esto es una prueba"));
         oferta.add(new Oferta("Oferta 4", "$200","http://static.viagrupo.com/thumbs/unnamed_1_11_JPG_464x464.jpg","Local 4","Esto es una prueba"));
         oferta.add(new Oferta("Oferta 5", "$100","http://static.viagrupo.com/thumbs/unnamed_11_11_PNG_464x464.png","Local 5","Esto es una prueba"));
+
+        for(int i = 0;i<oferta.size();i++)
+        {
+            oferta.get(i).setImages(getImgsUrl());
+        }
+
         return oferta;
+    }
+
+    private List<String> getImgsUrl()
+    {
+        List<String> imgs = new ArrayList<String>();
+        imgs.add("http://static.viagrupo.com/thumbs/unnamed_3_63_PNG_464x464.png");
+        imgs.add("http://static.viagrupo.com/thumbs/71207fa5-3a92-478e-b51d-ceab88d760e4_2_PNG_464x464_PNG_464x464.png");
+        imgs.add("http://static.viagrupo.com/thumbs/unnamed_17_JPG_464x464.jpg");
+        imgs.add("http://static.viagrupo.com/thumbs/unnamed_1_11_JPG_464x464.jpg");
+        imgs.add("http://static.viagrupo.com/thumbs/unnamed_11_11_PNG_464x464.png");
+        return imgs;
     }
 }

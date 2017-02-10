@@ -39,6 +39,22 @@
             android:layout_gravity="right|top"
             android:id="@+id/imageView2" />
 
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:srcCompat="@drawable/chevron_right"
+            android:layout_gravity="right|center"
+            android:id="@+id/imageView3" />
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:srcCompat="@drawable/chevron_right"
+            android:layout_gravity="left|center"
+            android:rotation="180"
+            android:id="@+id/imageView4" />
+
+
     </FrameLayout>
 
     <LinearLayout
