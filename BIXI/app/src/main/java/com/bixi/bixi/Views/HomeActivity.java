@@ -28,6 +28,7 @@ import com.bixi.bixi.Interfaces.HomePresenter;
 import com.bixi.bixi.Interfaces.HomeView;
 import com.bixi.bixi.Interfaces.RecyclerViewClickListener;
 import com.bixi.bixi.Login;
+import com.bixi.bixi.MapsActivity;
 import com.bixi.bixi.Pojos.Oferta;
 import com.bixi.bixi.Presenter.HomePresenterImpl;
 import com.bixi.bixi.R;
@@ -146,7 +147,14 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Recycle
 
         if (id == R.id.mybutton) {
             // do something here
-            loadSearchFragment();
+
+            Intent i = new Intent(HomeActivity.this,SearchActivity.class);
+            startActivity(i);
+            /*
+            De momento ya no cargamos ese fragmento,
+            en lugar de eso cargamos una nueva pantalla completa.
+             */
+            //loadSearchFragment();
         }
 
         if(id == R.id.logout)

@@ -20,4 +20,6 @@
 
     <string name="aceptar">Aceptar</string>
     <string name="cancel">Cancel</string>
+
+    <string name="reclamarOferta">reclamar oferta</string>
 </resources>
