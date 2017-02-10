@@ -25,7 +25,7 @@
 
     <Spinner
         android:layout_height="48dp"
-        android:id="@+id/spinner2"
+        android:id="@+id/spinnerUbicacion"
         android:layout_marginTop="24dp"
         app:layout_constraintTop_toBottomOf="@+id/spinnerTipoEstablecimiento"
         android:layout_marginEnd="16dp"
@@ -38,7 +38,7 @@
 
     <Spinner
         android:layout_height="48dp"
-        android:id="@+id/spinner3"
+        android:id="@+id/spinnerOrdernarPor"
         android:layout_width="0dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintRight_toRightOf="parent"
@@ -47,7 +47,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@+id/spinner2" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerUbicacion" />
 
     <TextView
         android:text="Rango de BIXIS"
@@ -63,7 +63,7 @@
         android:layout_marginTop="8dp"
         android:textSize="24sp"
         android:textColor="@color/colorAccent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner3" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerOrdernarPor" />
 
     <SeekBar
         android:layout_width="0dp"
@@ -103,4 +103,20 @@
         android:textSize="16sp"
         android:textColor="@color/colorAccent"
         app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        app:srcCompat="@drawable/chevron_right"
+        android:id="@+id/imageSearchGoNextPage"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp" />
 </android.support.constraint.ConstraintLayout>
