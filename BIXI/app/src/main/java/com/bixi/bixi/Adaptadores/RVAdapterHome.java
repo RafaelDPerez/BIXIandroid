@@ -15,6 +15,7 @@ import com.bixi.bixi.Pojos.Oferta;
 import com.bixi.bixi.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -30,6 +31,7 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
     Context context;
     LayoutInflater inflater;
     private static RecyclerViewClickListener itemListener;
+    private List<String> arrayImgs = new ArrayList<String>();
 
     public RVAdapterHome(List<Oferta> oferta, Activity context, RecyclerViewClickListener itemListener)
     {
@@ -37,6 +39,7 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
         this.context = context;
         this.itemListener = itemListener;
         this.inflater = LayoutInflater.from(context);
+
     }
     @Override
     public RVAdapterHome.OfertaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -47,18 +50,40 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
         return ovh;
     }
 
-    @Override
-    public void onBindViewHolder(RVAdapterHome.OfertaViewHolder holder, int position) {
-        holder.precio.setText(oferta.get(position).getPrecio());
-        holder.descripcion.setText(oferta.get(position).getDescripcion());
-        holder.titulo.setText(oferta.get(position).getTitulo());
-        String url = oferta.get(position).getDireccionImagen();
+    private void loadImage(ImageView img, String url)
+    {
         Picasso.with(context)
                 .load(url)
                 .fit()
                 .placeholder(R.color.colorAccent)
                 .error(R.color.colorAccent)
-                .into(holder.imageView);
+                .into(img);
+    }
+
+    @Override
+    public void onBindViewHolder(final RVAdapterHome.OfertaViewHolder holder, int position) {
+        holder.precio.setText(oferta.get(position).getPrecio());
+        holder.descripcion.setText(oferta.get(position).getDescripcion());
+        holder.titulo.setText(oferta.get(position).getTitulo());
+
+        String url = oferta.get(position).getDireccionImagen();
+        loadImage(holder.imageView,url);
+
+        final int posi = position;
+
+        holder.imgGoRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadImage(holder.imageView,oferta.get(posi).getImages().get(2));
+            }
+        });
+
+        holder.imgGoLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadImage(holder.imageView,oferta.get(posi).getDireccionImagen());
+            }
+        });
 
 
     }
@@ -86,6 +111,13 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
         @BindView(R.id.tvDescripcion)
         TextView descripcion;
 
+        @BindView(R.id.imageView3)
+        ImageView imgGoRight;
+
+        @BindView(R.id.imageView4)
+        ImageView imgGoLeft;
+
+
         @BindView(R.id.tvTitulo)
         TextView titulo;
         public OfertaViewHolder(View itemView) {
@@ -102,7 +134,6 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
             itemListener.recyclerViewListClicked(v,this.getLayoutPosition());
         }
     }
-
 
 }
 

@@ -1,14 +1,18 @@
 package com.bixi.bixi.Views;
 
 import android.animation.Animator;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -142,6 +146,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Recycle
 
         if (id == R.id.mybutton) {
             // do something here
+            loadSearchFragment();
         }
 
         if(id == R.id.logout)
@@ -158,6 +163,36 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Recycle
         return super.onOptionsItemSelected(item);
     }
 
+    private void loadSearchFragment()
+    {
+
+            LayoutInflater inflater = LayoutInflater.from(this);
+            View dialog_layout = inflater.inflate(R.layout.home_search_layout, null);
+
+            AlertDialog.Builder db = new AlertDialog.Builder(this);
+            db.setView(dialog_layout);
+
+
+            db.setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+
+            db.setNegativeButton(R.string.cancel, new
+
+                    DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+
+
+            AlertDialog dialog = db.show();
+        dialog.getButton(Dialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.purpleBixi));
+        dialog.getButton(Dialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.purpleBixi));
+    }
 
     private void setFA()
     {

@@ -1,5 +1,8 @@
 package com.bixi.bixi.Pojos;
 
+import java.lang.reflect.Array;
+import java.util.List;
+
 /**
  * Created by telynet on 1/5/2017.
  */
@@ -11,6 +14,8 @@ public class Oferta {
     private String descripcion;
 
     private String titulo;
+
+    private List<String> images = null;
 
     public Oferta(String nombre,String precio, String direccionImagen, String titulo,String descripcion)
     {
@@ -59,6 +64,14 @@ public class Oferta {
 
     public void setDireccionImagen(String direccionImagen) {
         this.direccionImagen = direccionImagen;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 
 
