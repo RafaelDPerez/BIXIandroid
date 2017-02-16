@@ -9,6 +9,8 @@ public interface AddUserView {
     void hideProgress();
 
     void setErrorPassworsNotMatch();
+    void SetErrorNeedToCompleteAllForm();
+
     void exito(String mensaje);
     void errorCamposIncorrectos(String mensaje);
 }

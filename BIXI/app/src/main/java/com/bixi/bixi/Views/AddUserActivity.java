@@ -183,6 +183,23 @@ public class AddUserActivity extends AppCompatActivity implements AddUserView {
     }
 
     @Override
+    public void SetErrorNeedToCompleteAllForm() {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setMessage(getResources().getString(R.string.faltanCampos));
+
+        builder1.setPositiveButton(
+                "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+
+                    }
+                });
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
+    }
+
+    @Override
     public void exito(String mensaje) {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
         builder1.setMessage(mensaje);
