@@ -26,13 +26,13 @@ import com.bixi.bixi.Utility.Constants;
 import com.bixi.bixi.Views.HomeActivity;
 import com.bixi.bixi.Views.AddUserActivity;
 import com.bixi.bixi.bixi.basics.RecuperarContrasena;
-//import com.facebook.CallbackManager;
-//import com.facebook.FacebookCallback;
-//import com.facebook.FacebookException;
-//import com.facebook.FacebookSdk;
-//import com.facebook.appevents.AppEventsLogger;
-//import com.facebook.login.LoginManager;
-//import com.facebook.login.LoginResult;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -59,7 +59,7 @@ public class Login extends AppCompatActivity implements
         View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener, LoginView {
 
-  //  private CallbackManager callbackManagerFaceBook;
+    private CallbackManager callbackManagerFaceBook;
     private TwitterAuthClient client;
 
     @BindString(R.string.twitter_key)
@@ -89,7 +89,7 @@ public class Login extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      //  FacebookSdk.sdkInitialize(getApplicationContext());
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         inicializaciones();
         setUpTwitter();
@@ -179,37 +179,37 @@ public class Login extends AppCompatActivity implements
     void handleFbLogin()
     {
         // Set permissions
-//        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email","user_photos","public_profile"));
-//
-//        LoginManager.getInstance().registerCallback(callbackManagerFaceBook,
-//                new FacebookCallback<LoginResult>() {
-//                    @Override
-//                    public void onSuccess(LoginResult loginResult) {
-//                        // App code
-//                        System.out.println("onSuccess");
-//                        System.out.println("Facebook ID: "+loginResult.getAccessToken().getUserId());
-//                        System.out.println("Facebook Auth Token: "+loginResult.getAccessToken().getToken());
-//
-//                    }
-//
-//                    @Override
-//                    public void onCancel() {
-//                        // App code
-//                    }
-//
-//                    @Override
-//                    public void onError(FacebookException exception) {
-//                        // App code
-//                        System.out.println("Facebook Error: "+exception.toString());
-//                    }
-//                });
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email","public_profile"));
+
+        LoginManager.getInstance().registerCallback(callbackManagerFaceBook,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        // App code
+                        System.out.println("onSuccess");
+                        System.out.println("Facebook ID: "+loginResult.getAccessToken().getUserId());
+                        System.out.println("Facebook Auth Token: "+loginResult.getAccessToken().getToken());
+
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        // App code
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        // App code
+                        System.out.println("Facebook Error: "+exception.toString());
+                    }
+                });
     }
 
     private void inicializaciones()
     {
       //  AppEventsLogger.activateApp(this);
         ButterKnife.bind(this);
-       // callbackManagerFaceBook = CallbackManager.Factory.create();
+        callbackManagerFaceBook = CallbackManager.Factory.create();
         presenter = new LoginPresenterImpl(this);
 
 

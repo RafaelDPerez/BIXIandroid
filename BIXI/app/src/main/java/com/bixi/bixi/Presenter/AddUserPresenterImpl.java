@@ -62,6 +62,9 @@ public class AddUserPresenterImpl implements AddUserPresenter, OnAddUserFinishLi
         if(view != null)
         {
             view.showProgress();
+            if(checkIfHaveInfo(userCreate.getFirst_name()) && checkIfHaveInfo(userCreate.getBirth_date()) && checkIfHaveInfo(userCreate.getGender()) && checkIfHaveInfo(userCreate.getPhone1()) && checkIfHaveInfo(userCreate.getEmail()) && checkIfHaveInfo(userCreate.getPassword()) && checkIfHaveInfo(userCreate.getPassword_confirm()) && checkIfHaveInfo(userCreate.getLast_name()) && checkIfHaveInfo(userCreate.getDocument_id()))
+            {
+
             if(userCreate.getPassword().equals(userCreate.getPassword_confirm()))
             {
                 service.putCreateUser(userCreate).enqueue(new Callback<CreateUserResponse>() {
@@ -93,7 +96,20 @@ public class AddUserPresenterImpl implements AddUserPresenter, OnAddUserFinishLi
                 view.hideProgress();
                 view.setErrorPassworsNotMatch();
             }
+        }else
+            {
+                view.hideProgress();
+                view.SetErrorNeedToCompleteAllForm();
+            }
         }
+    }
+
+    private boolean checkIfHaveInfo(String string)
+    {
+        if(string != null && !string.equals(""))
+            return true;
+        else
+            return false;
     }
 
     @Override

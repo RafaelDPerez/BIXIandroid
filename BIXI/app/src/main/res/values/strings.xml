@@ -7,10 +7,10 @@
     <string name="recuperarMiContrasena">Recuperar mi contraseña</string>
     <string name="graciasPorRegistrarse">Gracias por registrarse!</string>
 
-    <string name="facebook_app_id">1122908771165034</string>
+    <string name="facebook_app_id">406256306395139</string>
 
-    <string name="twitter_key">	ni4yAt5lbMMGrxBa5zJYFBk7M</string>
-    <string name="twitter_secret">dGTVHaxzIHUhVZLcihBt5dd2l0xjPJc7qhVLRfit9C6eWknsLy</string>
+    <string name="twitter_key">uNpPnDVbQ3BOducCiqlyXpoBC</string>
+    <string name="twitter_secret">oNFSCOEaXcZvgK3p6yKyyhE4OKRKBfEznG0UTn0h6pZjYqHJ51</string>
     <string name="title_activity_recuperar_contrasena">recuperarContrasena</string>
     <string name="title_activity_add_user">AddUserActivity</string>
     <string name="title_activity_maps">Map</string>
@@ -20,6 +20,8 @@
 
     <string name="aceptar">Aceptar</string>
     <string name="cancel">Cancel</string>
+
+    <string name="faltanCampos">Favor completar todos los campos del formulario.</string>
 
     <string name="reclamarOferta">reclamar oferta</string>
 </resources>
