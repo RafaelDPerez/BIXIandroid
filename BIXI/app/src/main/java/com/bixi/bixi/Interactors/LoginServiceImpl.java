@@ -48,7 +48,10 @@ public class LoginServiceImpl implements LoginService {
 
                 }else
                 {
-                    listener.apiError(response.errorBody().toString());
+                    if(response != null && response.errorBody() != null)
+                        listener.apiError(response.errorBody().toString());
+                    else
+                        listener.apiError("");
                 }
             }
 

@@ -59,19 +59,16 @@ public class HomeInteractorImpl implements HomeInteractor {
                     if(response.body().getSceResponseCode() == 0)
                     {
                         Log.e("Products Respuesta",response.body().getSceResponseMsg());
-//                        Log.e("Products Respuesta Code",response.body().getSceResponseCode());
-//                        Log.e("Productos Cantidad Pro",response.body().getTotal_records());
                     }else
                     {
                         Log.e("Products Respuesta",response.body().getSceResponseMsg());
-//                        Log.e("Products Respuesta Code",response.body().getSceResponseCode());
                     }
 
                 }else
                 {
-                    if(response.body().getSceResponseMsg() != null)
+
+                    if(response != null && response.body() != null && response.body().getSceResponseMsg() != null)
                         Log.e("Products Respuesta",response.body().getSceResponseMsg());
-//                    Log.e("Products Respuesta Code",response.body().getSceResponseCode());
                 }
             }
 
