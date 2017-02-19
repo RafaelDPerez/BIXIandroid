@@ -7,10 +7,10 @@
     <string name="recuperarMiContrasena">Recuperar mi contraseña</string>
     <string name="graciasPorRegistrarse">Gracias por registrarse!</string>
 
-    <string name="facebook_app_id">406256306395139</string>
+    <string name="facebook_app_id">274260726341769</string>
 
-    <string name="twitter_key">uNpPnDVbQ3BOducCiqlyXpoBC</string>
-    <string name="twitter_secret">oNFSCOEaXcZvgK3p6yKyyhE4OKRKBfEznG0UTn0h6pZjYqHJ51</string>
+    <string name="twitter_key">d8hMhW5zTg4jldxq6hMUCp5nU</string>
+    <string name="twitter_secret">r3ZjIoq7YDJER9RBNr2jgWCtwgqUnkbsUUNTuyT4uFkVBxNwiP</string>
     <string name="title_activity_recuperar_contrasena">recuperarContrasena</string>
     <string name="title_activity_add_user">AddUserActivity</string>
     <string name="title_activity_maps">Map</string>
