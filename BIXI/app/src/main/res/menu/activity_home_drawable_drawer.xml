@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/inicio"
+            android:title="Inicio"
+            android:icon="@drawable/chevron_right"/>
+        <item
+            android:id="@+id/mi_perfil"
+            android:title="Mi Perfil" />
+        <item
+            android:id="@+id/ofertas_like"
+            android:title="Ofertas que me gustaron" />
+        <item
+            android:id="@+id/configuracion"
+            android:title="Configuracion" />
+        <item
+            android:id="@+id/salir"
+            android:title="Salir" />
+    </group>
+
+</menu>

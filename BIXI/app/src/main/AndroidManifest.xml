@@ -80,7 +80,11 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".Views.SearchActivity"></activity>
+        <activity android:name=".Views.SearchActivity" />
+        <activity
+            android:name=".homeDrawable"
+            android:label="@string/title_activity_home_drawable"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -24,4 +24,10 @@
     <string name="faltanCampos">Favor completar todos los campos del formulario.</string>
 
     <string name="reclamarOferta">reclamar oferta</string>
+    <string name="title_activity_home_drawable">homeDrawable</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>
