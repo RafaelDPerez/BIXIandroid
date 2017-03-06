@@ -123,6 +123,10 @@ public class Login extends AppCompatActivity implements
     void login()
     {
         presenter.validarUsuario(edtEmail.getText().toString().trim(),edtPassword.getText().toString().trim());
+          Intent i = new Intent(Login.this, HomeActivity.class);
+      //  Intent i = new Intent(Login.this, homeDrawable.class);
+          i.putExtra(Constants.extraToken,token);
+        startActivity(i);
     }
 
     @OnClick(R.id.txtContrasena)
