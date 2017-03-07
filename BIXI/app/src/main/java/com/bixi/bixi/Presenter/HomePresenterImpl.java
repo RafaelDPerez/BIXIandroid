@@ -6,8 +6,10 @@ import com.bixi.bixi.Interfaces.HomePresenter;
 import com.bixi.bixi.Interfaces.HomeView;
 import com.bixi.bixi.Interfaces.OnHomeOfertasFinishListener;
 import com.bixi.bixi.Network.Injector;
+import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsJson;
 import com.bixi.bixi.Pojos.Oferta;
 import com.bixi.bixi.Pojos.ProductsSearch;
+import com.bixi.bixi.Views.HomeFragment;
 
 import java.util.List;
 
@@ -16,10 +18,14 @@ import java.util.List;
  */
 
 public class HomePresenterImpl implements HomePresenter, OnHomeOfertasFinishListener {
-    HomeView view;
+  //  HomeView view;
     HomeInteractor iteractor;
-
+    HomeFragment view;
     public HomePresenterImpl(HomeView view) {
+     //   this.view = view;
+        iteractor = new HomeInteractorImpl(Injector.provideCreateUserService());
+    }
+    public HomePresenterImpl(HomeFragment view) {
         this.view = view;
         iteractor = new HomeInteractorImpl(Injector.provideCreateUserService());
     }
@@ -34,7 +40,7 @@ public class HomePresenterImpl implements HomePresenter, OnHomeOfertasFinishList
     public void cargarProductsFromServer(String token, String search) {
         view.showProgress();
         ProductsSearch obj = new ProductsSearch();
-        obj.setSearch(search);
+        obj.setSearch(null);
         iteractor.loadProductsFromServer(token,obj,this);
     }
 
@@ -49,5 +55,11 @@ public class HomePresenterImpl implements HomePresenter, OnHomeOfertasFinishList
     public void ofertasError() {
         view.hideProgress();
         view.setError();
+    }
+
+    @Override
+    public void ofertasCargadasFromServer(ProductsJson productsJson) {
+        view.hideProgress();
+        view.operacionExitosaFromServer(productsJson);
     }
 }

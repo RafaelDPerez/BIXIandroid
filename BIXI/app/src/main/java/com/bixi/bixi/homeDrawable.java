@@ -1,5 +1,10 @@
 package com.bixi.bixi;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,10 +20,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.bixi.bixi.Adaptadores.RVAdapterMenu;
 import com.bixi.bixi.Interfaces.RecyclerViewClickListener;
 import com.bixi.bixi.Pojos.SimpleMenuPojo;
+import com.bixi.bixi.Utility.Constants;
+import com.bixi.bixi.Views.HomeActivity;
+import com.bixi.bixi.Views.HomeFragment;
+import com.bixi.bixi.Views.HomeProfileFragment;
+import com.bixi.bixi.Views.SearchActivity;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
@@ -30,6 +41,9 @@ public class homeDrawable extends AppCompatActivity
 
     RecyclerView rv;
     ArrayList<SimpleMenuPojo> menu;
+    private HomeFragment homeFragment;
+    private HomeProfileFragment homeProfileFragment;
+    public static Fragment actual_Fragment = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +71,9 @@ public class homeDrawable extends AppCompatActivity
                         .build());
         initializeRV();
         navigationView.setNavigationItemSelectedListener(this);
+
+        if(actual_Fragment == null)
+            getFragmentHome();
     }
 
     private void initializeRV()
@@ -75,14 +92,16 @@ public class homeDrawable extends AppCompatActivity
         ArrayList<SimpleMenuPojo> menu = new ArrayList<>();
         SimpleMenuPojo pojo1 = new SimpleMenuPojo("Inicio","0");
         menu.add(pojo1);
-        SimpleMenuPojo pojo2 = new SimpleMenuPojo("Mi Perfil","2");
+        SimpleMenuPojo pojo2 = new SimpleMenuPojo("Mi Perfil","1");
         menu.add(pojo2);
-        SimpleMenuPojo pojo3 = new SimpleMenuPojo("Ofertas que me gustaron","3");
+        SimpleMenuPojo pojo3 = new SimpleMenuPojo("Ofertas que me gustaron","2");
         menu.add(pojo3);
-        SimpleMenuPojo pojo4 = new SimpleMenuPojo("Configuración","4");
+        SimpleMenuPojo pojo4 = new SimpleMenuPojo("Ofertas cerca de mi","3");
         menu.add(pojo4);
-        SimpleMenuPojo pojo5 = new SimpleMenuPojo("Salir","5");
+        SimpleMenuPojo pojo5 = new SimpleMenuPojo("Configuración","4");
         menu.add(pojo5);
+        SimpleMenuPojo pojo6 = new SimpleMenuPojo("Salir","5");
+        menu.add(pojo6);
 
         return menu;
     }
@@ -100,7 +119,12 @@ public class homeDrawable extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home_drawable, menu);
+        if(actual_Fragment instanceof HomeFragment)
+            getMenuInflater().inflate(R.menu.menuhome, menu);
+        else if(actual_Fragment instanceof  HomeProfileFragment)
+        {
+
+        }
         return true;
     }
 
@@ -112,8 +136,10 @@ public class homeDrawable extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.mybutton) {
+            // do something here
+            Intent i = new Intent(this,SearchActivity.class);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
@@ -125,17 +151,7 @@ public class homeDrawable extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.inicio) {
-            // Handle the camera action
-        } else if (id == R.id.mi_perfil) {
 
-        } else if (id == R.id.ofertas_like) {
-
-        } else if (id == R.id.configuracion) {
-
-        } else if (id == R.id.salir) {
-
-        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -144,7 +160,66 @@ public class homeDrawable extends AppCompatActivity
 
     @Override
     public void recyclerViewListClicked(View v, int position) {
+
+        if(position == 0)
+            getFragmentHome();
+        else if(position == 1)
+            getFragmenProfile();
+        else if(position == 3)
+            launchMapsActivity();
+        else if(position == 5)
+            logout();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    private void launchMapsActivity()
+    {
+        Intent myIntent = new Intent(this, MapsActivity.class);
+        startActivity(myIntent);
+    }
+
+    private void logout()
+    {
+        SharedPreferences prefs =
+                getSharedPreferences(Constants.appPreferences, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("token", "");
+        editor.commit();
+        Intent newIntent = new Intent(this,Login.class);
+        newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        actual_Fragment = null;
+        startActivity(newIntent);
+    }
+
+    private void getFragmentHome()
+    {
+        FragmentTransaction ft;
+        homeFragment = HomeFragment.getInstance();
+        homeFragment.setRetainInstance(false);
+
+        ft = getFragmentManager().beginTransaction();
+        if (actual_Fragment != null)
+            ft.remove(actual_Fragment);
+        actual_Fragment = homeFragment;
+        ft.replace(R.id.details, homeFragment);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.commit();
+    }
+
+    private void getFragmenProfile()
+    {
+        FragmentTransaction ft;
+        homeProfileFragment = HomeProfileFragment.getInstance();
+        homeProfileFragment.setRetainInstance(false);
+
+        ft = getFragmentManager().beginTransaction();
+        if(actual_Fragment != null)
+            ft.remove(actual_Fragment);
+        actual_Fragment = homeProfileFragment;
+        ft.replace(R.id.details,homeProfileFragment);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.commit();
     }
 }

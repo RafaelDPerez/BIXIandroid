@@ -1,5 +1,6 @@
 package com.bixi.bixi.Interfaces;
 
+import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsJson;
 import com.bixi.bixi.Pojos.Oferta;
 
 import java.util.List;
@@ -11,4 +12,5 @@ import java.util.List;
 public interface OnHomeOfertasFinishListener {
     void ofertasCargadas(List<Oferta> ofertas);
     void ofertasError();
+    void ofertasCargadasFromServer(ProductsJson productsJson);
 }

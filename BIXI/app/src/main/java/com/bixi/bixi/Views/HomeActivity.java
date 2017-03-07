@@ -29,6 +29,7 @@ import com.bixi.bixi.Interfaces.HomeView;
 import com.bixi.bixi.Interfaces.RecyclerViewClickListener;
 import com.bixi.bixi.Login;
 import com.bixi.bixi.MapsActivity;
+import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsJson;
 import com.bixi.bixi.Pojos.Oferta;
 import com.bixi.bixi.Presenter.HomePresenterImpl;
 import com.bixi.bixi.R;
@@ -156,18 +157,6 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Recycle
              */
             //loadSearchFragment();
         }
-
-        if(id == R.id.logout)
-        {
-            SharedPreferences prefs =
-                    getSharedPreferences(Constants.appPreferences, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("token", "");
-            editor.commit();
-            Intent newIntent = new Intent(this,Login.class);
-            newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(newIntent);
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -266,10 +255,15 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Recycle
 
     @Override
     public void operacionExitosa(List<Oferta> ofertas) {
-        presenter = new HomePresenterImpl(this);
-        this.oferta = ofertas;
-        RVAdapterHome adapter = new RVAdapterHome(ofertas,this,this);
-        rv.setAdapter(adapter);
+      //  presenter = new HomePresenterImpl(this);
+      //  this.oferta = ofertas;
+      //  RVAdapterHome adapter = new RVAdapterHome(ofertas,this,this);
+       // rv.setAdapter(adapter);
+    }
+
+    @Override
+    public void operacionExitosaFromServer(ProductsJson productsJson) {
+
     }
 
 

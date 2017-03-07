@@ -1,6 +1,7 @@
 package com.bixi.bixi.Network;
 
 import com.bixi.bixi.Pojos.CreateUserResponse;
+import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsJson;
 import com.bixi.bixi.Pojos.Products;
 import com.bixi.bixi.Pojos.ProductsSearch;
 import com.bixi.bixi.Pojos.UserCreate;
@@ -30,5 +31,5 @@ public interface UserService {
     Call<UserLogin> postAttempLogin(@Body UserSimple user);
 
     @POST("search_products")
-    Call<Products> postProdcuts(@Header("X-Request-Id") String xRequestID, @Body ProductsSearch productsSearch);
+    Call<ProductsJson> postProdcuts(@Header("X-Request-Id") String xRequestID, @Body ProductsSearch productsSearch);
 }

@@ -22,6 +22,8 @@ public class DetailActivity extends AppCompatActivity {
     TextView titulo;
     @BindView(R.id.textViewDetalle)
     TextView detalle;
+    @BindView(R.id.tvBixiPoints)
+    TextView tvBixiPoints;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,8 @@ public class DetailActivity extends AppCompatActivity {
         {
             titulo.setText(extras.getString("nombre"));
             setImagen(extras.getString("url"));
+            detalle.setText(extras.getString("detalle"));
+            tvBixiPoints.setText(extras.getString("bixiPoints")+"B");
         }
     }
 
