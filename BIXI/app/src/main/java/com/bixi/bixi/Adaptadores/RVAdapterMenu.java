@@ -64,8 +64,10 @@ public class RVAdapterMenu extends RecyclerView.Adapter<RVAdapterMenu.MenuViewHo
                 else if(menuPojo.getLabelIcon().equals("2"))
                     holder.labelIcon.setImageResource(R.drawable.heart_outline_white);
                 else if(menuPojo.getLabelIcon().equals("3"))
-                    holder.labelIcon.setImageResource(R.drawable.settings);
+                    holder.labelIcon.setImageResource(R.drawable.google_maps);
                 else if(menuPojo.getLabelIcon().equals("4"))
+                    holder.labelIcon.setImageResource(R.drawable.settings);
+                else if(menuPojo.getLabelIcon().equals("5"))
                     holder.labelIcon.setImageResource(R.drawable.exit_to_app);
                 else
                 {
@@ -94,6 +96,7 @@ public class RVAdapterMenu extends RecyclerView.Adapter<RVAdapterMenu.MenuViewHo
         public MenuViewHolder(View itemView)
         {
             super(itemView);
+            itemView.setOnClickListener(this);
             ButterKnife.bind(this, itemView);
         }
 

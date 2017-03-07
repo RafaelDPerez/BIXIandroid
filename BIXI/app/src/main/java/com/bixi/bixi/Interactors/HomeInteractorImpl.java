@@ -6,6 +6,7 @@ import android.util.Log;
 import com.bixi.bixi.Interfaces.HomeInteractor;
 import com.bixi.bixi.Interfaces.OnHomeOfertasFinishListener;
 import com.bixi.bixi.Network.UserService;
+import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsJson;
 import com.bixi.bixi.Pojos.Oferta;
 import com.bixi.bixi.Pojos.Products;
 import com.bixi.bixi.Pojos.ProductsSearch;
@@ -50,15 +51,16 @@ public class HomeInteractorImpl implements HomeInteractor {
     }
 
     @Override
-    public void loadProductsFromServer(String token, ProductsSearch productsSearch, OnHomeOfertasFinishListener listener) {
-        service.postProdcuts(token,productsSearch).enqueue(new Callback<Products>() {
+    public void loadProductsFromServer(String token, ProductsSearch productsSearch, final OnHomeOfertasFinishListener listener) {
+        service.postProdcuts(token,productsSearch).enqueue(new Callback<ProductsJson>() {
             @Override
-            public void onResponse(Call<Products> call, Response<Products> response) {
+            public void onResponse(Call<ProductsJson> call, Response<ProductsJson> response) {
                 if(response.isSuccessful())
                 {
                     if(response.body().getSceResponseCode() == 0)
                     {
                         Log.e("Products Respuesta",response.body().getSceResponseMsg());
+                        listener.ofertasCargadasFromServer(response.body());
                     }else
                     {
                         Log.e("Products Respuesta",response.body().getSceResponseMsg());
@@ -73,7 +75,7 @@ public class HomeInteractorImpl implements HomeInteractor {
             }
 
             @Override
-            public void onFailure(Call<Products> call, Throwable t) {
+            public void onFailure(Call<ProductsJson> call, Throwable t) {
                 Log.e("Products Error",t.getMessage());
             }
         });

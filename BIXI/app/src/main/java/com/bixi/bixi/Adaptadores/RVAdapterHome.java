@@ -11,7 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bixi.bixi.Interfaces.RecyclerViewClickListener;
+import com.bixi.bixi.Interfaces.RecyclerViewClickListenerHome;
+import com.bixi.bixi.Pojos.ObjSearchProducts.ResultProductsJson;
 import com.bixi.bixi.Pojos.Oferta;
+import com.bixi.bixi.Pojos.Result;
 import com.bixi.bixi.R;
 import com.squareup.picasso.Picasso;
 
@@ -27,13 +30,13 @@ import butterknife.ButterKnife;
 
 public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaViewHolder> {
 
-    List<Oferta> oferta;
+    List<ResultProductsJson> oferta;
     Context context;
     LayoutInflater inflater;
-    private static RecyclerViewClickListener itemListener;
+    private static RecyclerViewClickListenerHome itemListener;
     private List<String> arrayImgs = new ArrayList<String>();
 
-    public RVAdapterHome(List<Oferta> oferta, Activity context, RecyclerViewClickListener itemListener)
+    public RVAdapterHome(List<ResultProductsJson> oferta, Activity context, RecyclerViewClickListenerHome itemListener)
     {
         this.oferta = oferta;
         this.context = context;
@@ -61,32 +64,60 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
     }
 
     @Override
-    public void onBindViewHolder(final RVAdapterHome.OfertaViewHolder holder, int position) {
-        holder.precio.setText(oferta.get(position).getPrecio());
-        holder.descripcion.setText(oferta.get(position).getDescripcion());
-        holder.titulo.setText(oferta.get(position).getTitulo());
+    public void onBindViewHolder(final RVAdapterHome.OfertaViewHolder holder, final int position) {
 
-        String url = oferta.get(position).getDireccionImagen();
-        loadImage(holder.imageView,url);
+        ResultProductsJson obj = oferta.get(position);
 
-        final int posi = position;
+        if(obj!= null)
+        {
 
-        holder.imgGoRight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadImage(holder.imageView,oferta.get(posi).getImages().get(2));
-            }
-        });
+          //  holder.precio.setText(oferta.get(position).getPrecio());
 
-        holder.imgGoLeft.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadImage(holder.imageView,oferta.get(posi).getDireccionImagen());
-            }
-        });
+            if(obj.getCommerceAddress() != null)
+                holder.descripcion.setText(obj.getCommerceAddress());
 
+            if(obj.getCommerceName() != null)
+                holder.titulo.setText(obj.getCommerceName());
+
+            String url = oferta.get(position).getProducts().get(0).get(0).getImages().get(0);
+            oferta.get(position).setOferDisplay(0);
+            loadImage(holder.imageView,url);
+
+            final int posi = position;
+
+            holder.imgGoRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if(oferta.get(position).getOferDisplay()< oferta.get(position).getMaxquantityOffers() - 1)
+                    {
+                        int currentPosition = oferta.get(position).getOferDisplay();
+                        currentPosition ++;
+                        loadImage(holder.imageView,oferta.get(posi).getProducts().get(0).get(currentPosition).getImages().get(0));
+                        oferta.get(position).setOferDisplay(currentPosition);
+                    }
+
+                }
+            });
+
+            holder.imgGoLeft.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(oferta.get(position).getOferDisplay() > 0)
+                    {
+                        int currentPosition = oferta.get(position).getOferDisplay();
+                        currentPosition --;
+                        loadImage(holder.imageView,oferta.get(posi).getProducts().get(0).get(currentPosition).getImages().get(0));
+                        oferta.get(position).setOferDisplay(currentPosition);
+                    }
+                }
+            });
+        }
+        holder.bind(oferta.get(position));
 
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -117,6 +148,8 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
         @BindView(R.id.imageView4)
         ImageView imgGoLeft;
 
+        private ResultProductsJson resultProductsJson;
+
 
         @BindView(R.id.tvTitulo)
         TextView titulo;
@@ -127,11 +160,16 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
 
         }
 
+        public void bind(ResultProductsJson item) {
+            resultProductsJson = item;
+            // Update the ViewHolder to the item's specifications.
+        }
 
 
         @Override
         public void onClick(View v) {
-            itemListener.recyclerViewListClicked(v,this.getLayoutPosition());
+
+            itemListener.recyclerViewListClicked(v,this.getLayoutPosition(),resultProductsJson);
         }
     }
 

@@ -27,7 +27,8 @@ public class SplashActivity extends AppCompatActivity {
         String token = prefs.getString("token", "");
         Intent intent;
         if (token != null && !token.equals("")) {
-            intent = new Intent(this, HomeActivity.class);
+            intent = new Intent(this, homeDrawable.class);
+            intent.putExtra(Constants.extraToken,token);
         } else
         {
             intent = new Intent(this, Login.class);

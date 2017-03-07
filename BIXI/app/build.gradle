@@ -47,11 +47,12 @@ dependencies {
 
 
 
+
+
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
-
     compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
     compile 'com.android.support:mediarouter-v7:25.0.0'
@@ -64,9 +65,10 @@ dependencies {
     compile 'com.github.clans:fab:1.6.4'
     compile 'com.google.android.gms:play-services:10.0.1'
     compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
+    compile 'com.jakewharton.timber:timber:4.5.1'
+    compile 'com.android.support:support-v4:25.2.0'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
-
-    compile 'com.jakewharton.timber:timber:4.5.1'
 }
 apply plugin: 'com.google.gms.google-services'

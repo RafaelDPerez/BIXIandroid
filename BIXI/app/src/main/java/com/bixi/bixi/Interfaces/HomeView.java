@@ -1,5 +1,6 @@
 package com.bixi.bixi.Interfaces;
 
+import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsJson;
 import com.bixi.bixi.Pojos.Oferta;
 
 import java.util.List;
@@ -15,4 +16,5 @@ public interface HomeView {
 
     void setError();
     void operacionExitosa(List<Oferta> ofertas);
+    void operacionExitosaFromServer(ProductsJson productsJson);
 }
