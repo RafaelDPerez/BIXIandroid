@@ -31,5 +31,5 @@ public interface UserService {
     Call<UserLogin> postAttempLogin(@Body UserSimple user);
 
     @POST("search_products")
-    Call<ProductsJson> postProdcuts(@Header("X-Request-Id") String xRequestID, @Body ProductsSearch productsSearch);
+    Call<ProductsJson> postProdcuts(@Body ProductsSearch productsSearch);
 }

@@ -51,10 +51,6 @@ public class homeDrawable extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -195,31 +191,39 @@ public class homeDrawable extends AppCompatActivity
 
     private void getFragmentHome()
     {
-        FragmentTransaction ft;
-        homeFragment = HomeFragment.getInstance();
-        homeFragment.setRetainInstance(false);
+        if(!(actual_Fragment instanceof HomeFragment))
+        {
+            FragmentTransaction ft;
+            homeFragment = HomeFragment.getInstance();
+            homeFragment.setRetainInstance(false);
 
-        ft = getFragmentManager().beginTransaction();
-        if (actual_Fragment != null)
-            ft.remove(actual_Fragment);
-        actual_Fragment = homeFragment;
-        ft.replace(R.id.details, homeFragment);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.commit();
+            ft = getFragmentManager().beginTransaction();
+            if (actual_Fragment != null)
+                ft.remove(actual_Fragment);
+            actual_Fragment = homeFragment;
+            ft.replace(R.id.details, homeFragment);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.commit();
+        }
+
     }
 
     private void getFragmenProfile()
     {
-        FragmentTransaction ft;
-        homeProfileFragment = HomeProfileFragment.getInstance();
-        homeProfileFragment.setRetainInstance(false);
+        if(!(actual_Fragment instanceof  HomeProfileFragment))
+        {
+            FragmentTransaction ft;
+            homeProfileFragment = HomeProfileFragment.getInstance();
+            homeProfileFragment.setRetainInstance(false);
 
-        ft = getFragmentManager().beginTransaction();
-        if(actual_Fragment != null)
-            ft.remove(actual_Fragment);
-        actual_Fragment = homeProfileFragment;
-        ft.replace(R.id.details,homeProfileFragment);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.commit();
+            ft = getFragmentManager().beginTransaction();
+            if(actual_Fragment != null)
+                ft.remove(actual_Fragment);
+            actual_Fragment = homeProfileFragment;
+            ft.replace(R.id.details,homeProfileFragment);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.commit();
+        }
+
     }
 }

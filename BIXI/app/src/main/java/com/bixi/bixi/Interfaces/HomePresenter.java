@@ -8,5 +8,5 @@ import com.bixi.bixi.Pojos.ProductsSearch;
 
 public interface HomePresenter {
     void cargarOfertas();
-    void cargarProductsFromServer(String token,String search);
+    void cargarProductsFromServer(String search);
 }

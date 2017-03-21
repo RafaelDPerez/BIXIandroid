@@ -40,7 +40,7 @@ public class ResultProductsJson implements Serializable
     private String image;
     @SerializedName("products")
     @Expose
-    private List<List<Product>> products = null;
+    private List<Product> products = null;
     private final static long serialVersionUID = -8675013932056170891L;
     private int oferDisplay;
     private int maxquantityOffers;
@@ -109,11 +109,11 @@ public class ResultProductsJson implements Serializable
         this.image = image;
     }
 
-    public List<List<Product>> getProducts() {
+    public List<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<List<Product>> products) {
+    public void setProducts(List<Product> products) {
         this.products = products;
     }
 
