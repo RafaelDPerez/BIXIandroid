@@ -51,8 +51,8 @@ public class HomeInteractorImpl implements HomeInteractor {
     }
 
     @Override
-    public void loadProductsFromServer(String token, ProductsSearch productsSearch, final OnHomeOfertasFinishListener listener) {
-        service.postProdcuts(token,productsSearch).enqueue(new Callback<ProductsJson>() {
+    public void loadProductsFromServer(ProductsSearch productsSearch, final OnHomeOfertasFinishListener listener) {
+        service.postProdcuts(productsSearch).enqueue(new Callback<ProductsJson>() {
             @Override
             public void onResponse(Call<ProductsJson> call, Response<ProductsJson> response) {
                 if(response.isSuccessful())

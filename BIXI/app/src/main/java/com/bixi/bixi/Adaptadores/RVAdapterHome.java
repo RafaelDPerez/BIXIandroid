@@ -79,7 +79,7 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
             if(obj.getCommerceName() != null)
                 holder.titulo.setText(obj.getCommerceName());
 
-            String url = oferta.get(position).getProducts().get(0).get(0).getImages().get(0);
+            String url = oferta.get(position).getProducts().get(0).getImages().get(0);
             oferta.get(position).setOferDisplay(0);
             loadImage(holder.imageView,url);
 
@@ -93,7 +93,7 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
                     {
                         int currentPosition = oferta.get(position).getOferDisplay();
                         currentPosition ++;
-                        loadImage(holder.imageView,oferta.get(posi).getProducts().get(0).get(currentPosition).getImages().get(0));
+                        loadImage(holder.imageView,oferta.get(posi).getProducts().get(currentPosition).getImages().get(0));
                         oferta.get(position).setOferDisplay(currentPosition);
                     }
 
@@ -107,7 +107,7 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
                     {
                         int currentPosition = oferta.get(position).getOferDisplay();
                         currentPosition --;
-                        loadImage(holder.imageView,oferta.get(posi).getProducts().get(0).get(currentPosition).getImages().get(0));
+                        loadImage(holder.imageView,oferta.get(posi).getProducts().get(currentPosition).getImages().get(0));
                         oferta.get(position).setOferDisplay(currentPosition);
                     }
                 }

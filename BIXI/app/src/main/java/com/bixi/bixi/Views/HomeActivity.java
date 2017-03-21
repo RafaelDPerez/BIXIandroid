@@ -118,7 +118,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Recycle
         super.onResume();
         presenter.cargarOfertas();
         if(token != null && !token.equals(""))
-            presenter.cargarProductsFromServer(token,"botella");
+            presenter.cargarProductsFromServer("botella");
 
     }
 

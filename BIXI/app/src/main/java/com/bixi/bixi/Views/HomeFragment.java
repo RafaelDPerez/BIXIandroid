@@ -3,8 +3,11 @@ package com.bixi.bixi.Views;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -51,6 +54,9 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
 
     @BindView(R.id.floatingActionButton)
     FloatingActionMenu fab;
+
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     private List<Oferta> oferta;
     private ProductsJson productsJson;
@@ -116,16 +122,32 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
       //  inicializarFab();
         onClickFabs();
 
-
+        presenter.cargarProductsFromServer("botella");
+        swipeRefreshRV();
 
     }
+
+    private void swipeRefreshRV()
+    {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                refreshItems();
+            }
+        });
+    }
+
+   private void refreshItems() {
+       presenter.cargarProductsFromServer("botella");
+    }
+
 
     @Override
     public void onStart() {
         super.onStart();
  //       presenter.cargarOfertas();
-        if(token != null && !token.equals(""))
-            presenter.cargarProductsFromServer(token,"botella");
+ //           presenter.cargarProductsFromServer("botella");
     }
 
     private void onClickFabs()
@@ -203,7 +225,7 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
         {
             if(result.get(i) != null && result.get(i).getProducts().get(0) != null)
             {
-                List<Product> obj = result.get(i).getProducts().get(0);
+                List<Product> obj = result.get(i).getProducts();
                 for(int x = 0;x<obj.size();x++)
                 {
                     List<String> objImage = new ArrayList<>();
@@ -232,8 +254,8 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
                     {
                         objImage.add("http://static.viagrupo.com/userupload/vargas01-04.png");
                     }
-                    this.productsJson.getResult().get(i).getProducts().get(0).get(x).setImages(objImage);
-                    this.productsJson.getResult().get(i).setMaxquantityOffers(this.productsJson.getResult().get(i).getProducts().get(0).size());
+                    this.productsJson.getResult().get(i).getProducts().get(x).setImages(objImage);
+                    this.productsJson.getResult().get(i).setMaxquantityOffers(this.productsJson.getResult().get(i).getProducts().size());
                 }
             }
 
@@ -241,6 +263,9 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
         result = this.productsJson.getResult();
         RVAdapterHome adapter = new RVAdapterHome(result,getActivity(),this);
         rv.setAdapter(adapter);
+
+        if(swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -249,11 +274,19 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
         ResultProductsJson obj = resultProductsJson;
         int posiSubOfert = obj.getOferDisplay();
         Intent i = new Intent(getActivity(),DetailActivity.class);
-        i.putExtra("nombre",obj.getProducts().get(0).get(posiSubOfert).getName());
-        i.putExtra("url",obj.getProducts().get(0).get(posiSubOfert).getImages().get(0));
-        i.putExtra("detalle",obj.getProducts().get(0).get(posiSubOfert).getDescription());
-        i.putExtra("bixiPoints",obj.getProducts().get(0).get(posiSubOfert).getPoints());
-        startActivity(i);
+        i.putExtra("nombre",obj.getProducts().get(posiSubOfert).getName());
+        i.putExtra("url",obj.getProducts().get(posiSubOfert).getImages().get(0));
+        i.putExtra("detalle",obj.getProducts().get(posiSubOfert).getDescription());
+        i.putExtra("bixiPoints",obj.getProducts().get(posiSubOfert).getPoints());
+
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            String animationName = getActivity().getString(R.string.animation_img);
+            ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),v,animationName);
+            startActivity(i,activityOptionsCompat.toBundle());
+        }else
+            startActivity(i);
 
     }
 

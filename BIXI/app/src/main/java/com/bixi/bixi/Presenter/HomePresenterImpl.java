@@ -37,11 +37,11 @@ public class HomePresenterImpl implements HomePresenter, OnHomeOfertasFinishList
     }
 
     @Override
-    public void cargarProductsFromServer(String token, String search) {
+    public void cargarProductsFromServer(String search) {
         view.showProgress();
         ProductsSearch obj = new ProductsSearch();
-        obj.setSearch(null);
-        iteractor.loadProductsFromServer(token,obj,this);
+        obj.setSearch("");
+        iteractor.loadProductsFromServer(obj,this);
     }
 
 

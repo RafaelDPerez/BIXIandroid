@@ -21,6 +21,9 @@ public class Product implements Serializable
     @SerializedName("description")
     @Expose
     private String description;
+    @SerializedName("tags")
+    @Expose
+    private String tags;
     @SerializedName("points")
     @Expose
     private String points;
@@ -33,17 +36,19 @@ public class Product implements Serializable
     @SerializedName("is_offer")
     @Expose
     private String isOffer;
+    @SerializedName("cdate")
+    @Expose
+    private String cdate;
+    @SerializedName("mdate")
+    @Expose
+    private String mdate;
     @SerializedName("status")
     @Expose
     private String status;
-
-
-
     @SerializedName("images")
     @Expose
     private List<String> images = null;
-
-    private final static long serialVersionUID = -4649891129368759745L;
+    private final static long serialVersionUID = -3537942964889807896L;
 
     public String getProductId() {
         return productId;
@@ -67,6 +72,14 @@ public class Product implements Serializable
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 
     public String getPoints() {
@@ -101,6 +114,22 @@ public class Product implements Serializable
         this.isOffer = isOffer;
     }
 
+    public String getCdate() {
+        return cdate;
+    }
+
+    public void setCdate(String cdate) {
+        this.cdate = cdate;
+    }
+
+    public String getMdate() {
+        return mdate;
+    }
+
+    public void setMdate(String mdate) {
+        this.mdate = mdate;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -116,6 +145,5 @@ public class Product implements Serializable
     public void setImages(List<String> images) {
         this.images = images;
     }
-
 
 }

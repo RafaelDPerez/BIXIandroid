@@ -8,5 +8,5 @@ import com.bixi.bixi.Pojos.ProductsSearch;
 
 public interface HomeInteractor {
     void buscarOferta(OnHomeOfertasFinishListener listener);
-    void loadProductsFromServer(String token,ProductsSearch productsSearch,OnHomeOfertasFinishListener listener);
+    void loadProductsFromServer(ProductsSearch productsSearch,OnHomeOfertasFinishListener listener);
 }
