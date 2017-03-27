@@ -3,6 +3,8 @@ package com.bixi.bixi.Views;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,7 +27,9 @@ import com.bixi.bixi.Interfaces.RecyclerViewClickListenerHome;
 import com.bixi.bixi.MapsActivity;
 import com.bixi.bixi.Pojos.ObjSearchProducts.Product;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsJson;
+import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsLiketItJson;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ResultProductsJson;
+import com.bixi.bixi.Pojos.ObjSearchProducts.ResultProductsLikerItJson;
 import com.bixi.bixi.Pojos.Oferta;
 import com.bixi.bixi.Presenter.HomePresenterImpl;
 import com.bixi.bixi.R;
@@ -117,6 +121,7 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
 
         bar.setVisibility(View.GONE);
         rv.setVisibility(View.VISIBLE);
+        bar.getIndeterminateDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY);
 
        // setFA();
       //  inicializarFab();
@@ -153,37 +158,7 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
     private void onClickFabs()
     {
 
-        /*
-        fabMapa.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(HomeActivity.this, MapsActivity.class);
-                startActivity(myIntent);
-            }
-        });
-        */
-
     }
-/*
-    private void inicializarFab()
-    {
-        fabMapa = initSubFabs("",R.mipmap.ic_map_white_24dp);
-        fab.addMenuButton(fabMapa);
-    }
-
-    private FloatingActionButton initSubFabs(String label, int drawable)
-    {
-
-        FloatingActionButton fab = new FloatingActionButton(getActivity());
-        fab.setColorNormal(getResources().getColor(R.color.purpleBixi));
-        fab.setColorPressed(getResources().getColor(R.color.purpleBixi2));
-        fab.setButtonSize(FloatingActionButton.SIZE_NORMAL);
-        fab.setLabelText(label);
-        fab.setImageResource(drawable);
-
-        return fab;
-    }
-    */
 
     private void loadView(LayoutInflater inflater, ViewGroup container) {
         // TODO Auto-generated method stub
@@ -212,9 +187,7 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
 
     @Override
     public void operacionExitosa(List<Oferta> ofertas) {
-       // this.oferta = ofertas;
-      //  RVAdapterHome adapter = new RVAdapterHome(ofertas,getActivity(),this);
-     //   rv.setAdapter(adapter);
+
     }
 
     @Override
@@ -269,6 +242,16 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
     }
 
     @Override
+    public void operacionExitosaLikeItFromServer(ProductsLiketItJson productsLiketItJson) {
+
+    }
+
+    @Override
+    public void updateRV(boolean success,int position) {
+
+    }
+
+    @Override
     public void recyclerViewListClicked(View v, int position,ResultProductsJson resultProductsJson) {
 
         ResultProductsJson obj = resultProductsJson;
@@ -278,7 +261,8 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
         i.putExtra("url",obj.getProducts().get(posiSubOfert).getImages().get(0));
         i.putExtra("detalle",obj.getProducts().get(posiSubOfert).getDescription());
         i.putExtra("bixiPoints",obj.getProducts().get(posiSubOfert).getPoints());
-
+        i.putExtra("product_id",obj.getProducts().get(posiSubOfert).getProductId());
+        i.putExtra(Constants.extraToken,token);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {
@@ -288,6 +272,23 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
         }else
             startActivity(i);
 
+    }
+
+    @Override
+    public void recyclerViewClicked(View v, int position) {
+
+    }
+
+    @Override
+    public void recyclerViewRemoveItem(View v, int position) {
+
+    }
+
+    @Override
+    public void recyclerViewLiketItem(View v, int position, ResultProductsJson resultProductsJson) {
+        ResultProductsJson obj = resultProductsJson;
+        int posiSubOfert = obj.getOferDisplay();
+        presenter.likeProductsFromServer(token,obj.getProducts().get(posiSubOfert).getProductId(),position);
     }
 
     public ResultProductsJson getItem(int position)

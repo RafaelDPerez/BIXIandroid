@@ -83,7 +83,7 @@
                     android:layout_height="52dp"
                     android:textColor="@color/colorAccent"
                     android:paddingLeft="16dp"
-                    android:id="@+id/button2"
+                    android:id="@+id/btnReclamarOfertaDetail"
                     android:gravity="center_vertical"
                     android:background="@color/purpleBixi"
                     android:layout_alignParentBottom="true"
