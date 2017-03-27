@@ -61,7 +61,7 @@ public class AddUserActivity extends AppCompatActivity implements AddUserView {
     @BindView(R.id.progressBar2)
     ProgressBar progressBar;
 
-    @BindView(R.id.imgAddUserGo2)
+    @BindView(R.id.imgGoRight)
     ImageView go2;
     AddUserPresenter presenter;
     int year, month,day;
@@ -89,7 +89,7 @@ public class AddUserActivity extends AppCompatActivity implements AddUserView {
         vf.setDisplayedChild(1);
     }
 
-    @OnClick(R.id.imgAddUserGo2)
+    @OnClick(R.id.imgGoRight)
     void nextPage2()
     {
         UserCreate userCreate = new UserCreate();
@@ -115,7 +115,7 @@ public class AddUserActivity extends AppCompatActivity implements AddUserView {
 
     }
 
-    @OnClick(R.id.imageVireGoLeft)
+    @OnClick(R.id.imgGoLeft)
     void previousPage()
     {
         vf.setDisplayedChild(0);

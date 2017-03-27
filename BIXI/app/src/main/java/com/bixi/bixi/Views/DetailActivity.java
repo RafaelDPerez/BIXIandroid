@@ -1,5 +1,6 @@
 package com.bixi.bixi.Views;
 
+import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,10 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bixi.bixi.R;
+import com.bixi.bixi.Utility.Constants;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -24,6 +27,9 @@ public class DetailActivity extends AppCompatActivity {
     TextView detalle;
     @BindView(R.id.tvBixiPoints)
     TextView tvBixiPoints;
+
+    String productId;
+    String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +44,18 @@ public class DetailActivity extends AppCompatActivity {
             setImagen(extras.getString("url"));
             detalle.setText(extras.getString("detalle"));
             tvBixiPoints.setText(extras.getString("bixiPoints")+"B");
+            productId = extras.getString("product_id");
+            token = extras.getString(Constants.extraToken);
         }
+    }
+
+    @OnClick(R.id.btnReclamarOfertaDetail)
+    void reclamarOferta()
+    {
+        Intent i = new Intent(DetailActivity.this,PasswordActivity.class);
+        i.putExtra("product_id",productId);
+        i.putExtra(Constants.extraToken,token);
+        startActivity(i);
     }
 
     private void makeNoLimits()

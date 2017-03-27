@@ -30,6 +30,7 @@ import com.bixi.bixi.Interfaces.RecyclerViewClickListener;
 import com.bixi.bixi.Login;
 import com.bixi.bixi.MapsActivity;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsJson;
+import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsLiketItJson;
 import com.bixi.bixi.Pojos.Oferta;
 import com.bixi.bixi.Presenter.HomePresenterImpl;
 import com.bixi.bixi.R;
@@ -263,6 +264,16 @@ public class HomeActivity extends AppCompatActivity implements HomeView, Recycle
 
     @Override
     public void operacionExitosaFromServer(ProductsJson productsJson) {
+
+    }
+
+    @Override
+    public void operacionExitosaLikeItFromServer(ProductsLiketItJson productsLiketItJson) {
+
+    }
+
+    @Override
+    public void updateRV(boolean success, int position) {
 
     }
 

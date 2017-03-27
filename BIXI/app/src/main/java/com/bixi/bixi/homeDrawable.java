@@ -28,8 +28,10 @@ import com.bixi.bixi.Pojos.SimpleMenuPojo;
 import com.bixi.bixi.Utility.Constants;
 import com.bixi.bixi.Views.HomeActivity;
 import com.bixi.bixi.Views.HomeFragment;
+import com.bixi.bixi.Views.HomeLikeIt;
 import com.bixi.bixi.Views.HomeProfileFragment;
 import com.bixi.bixi.Views.SearchActivity;
+import com.bixi.bixi.Views.TransaccionesFragment;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
@@ -98,7 +100,8 @@ public class homeDrawable extends AppCompatActivity
         menu.add(pojo5);
         SimpleMenuPojo pojo6 = new SimpleMenuPojo("Salir","5");
         menu.add(pojo6);
-
+        SimpleMenuPojo pojo7 = new SimpleMenuPojo("Transacciónes","6");
+        menu.add(pojo7);
         return menu;
     }
 
@@ -115,12 +118,9 @@ public class homeDrawable extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if(actual_Fragment instanceof HomeFragment)
-            getMenuInflater().inflate(R.menu.menuhome, menu);
-        else if(actual_Fragment instanceof  HomeProfileFragment)
-        {
+     //   if(actual_Fragment instanceof HomeFragment)
+       //     getMenuInflater().inflate(R.menu.menuhome, menu);
 
-        }
         return true;
     }
 
@@ -161,13 +161,34 @@ public class homeDrawable extends AppCompatActivity
             getFragmentHome();
         else if(position == 1)
             getFragmenProfile();
+        else if(position == 2)
+            getFragmentHomeLikeIt();
         else if(position == 3)
             launchMapsActivity();
         else if(position == 5)
             logout();
+        else if(position == 6)
+            launchHistorical();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    private void launchHistorical() {
+        if(!(actual_Fragment instanceof TransaccionesFragment))
+        {
+            FragmentTransaction ft;
+            TransaccionesFragment fg = TransaccionesFragment.getInstance();
+            fg.setRetainInstance(false);
+
+            ft = getFragmentManager().beginTransaction();
+            if(actual_Fragment != null)
+                ft.remove(actual_Fragment);
+            actual_Fragment = fg;
+            ft.replace(R.id.details,fg);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.commit();
+        }
     }
 
     private void launchMapsActivity()
@@ -187,6 +208,24 @@ public class homeDrawable extends AppCompatActivity
         newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         actual_Fragment = null;
         startActivity(newIntent);
+    }
+
+    private void getFragmentHomeLikeIt()
+    {
+        if(!(actual_Fragment instanceof HomeLikeIt))
+        {
+            FragmentTransaction ft;
+            HomeLikeIt fg = HomeLikeIt.getInstance();
+            fg.setRetainInstance(false);
+
+            ft = getFragmentManager().beginTransaction();
+            if(actual_Fragment != null)
+                ft.remove(actual_Fragment);
+            actual_Fragment = fg;
+            ft.replace(R.id.details,fg);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.commit();
+        }
     }
 
     private void getFragmentHome()

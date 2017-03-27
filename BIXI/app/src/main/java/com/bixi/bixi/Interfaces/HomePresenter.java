@@ -1,5 +1,6 @@
 package com.bixi.bixi.Interfaces;
 
+import com.bixi.bixi.Pojos.ObjSearchProducts.ResultProductsLikerItJson;
 import com.bixi.bixi.Pojos.ProductsSearch;
 
 /**
@@ -9,4 +10,9 @@ import com.bixi.bixi.Pojos.ProductsSearch;
 public interface HomePresenter {
     void cargarOfertas();
     void cargarProductsFromServer(String search);
+    void cargarProductosFavoritosFromServer(String token);
+    void likeProductsFromServer(String token, String id, int position);
+    void dislikeProductsFromServer(String token, String id, int position);
+
+
 }

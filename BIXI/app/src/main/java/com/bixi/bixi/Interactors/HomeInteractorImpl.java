@@ -1,12 +1,11 @@
 package com.bixi.bixi.Interactors;
 
-import android.os.Handler;
-import android.util.Log;
-
 import com.bixi.bixi.Interfaces.HomeInteractor;
 import com.bixi.bixi.Interfaces.OnHomeOfertasFinishListener;
 import com.bixi.bixi.Network.UserService;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsJson;
+import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsLiketItJson;
+import com.bixi.bixi.Pojos.ObjSearchProducts.ResultProductsLikerItJson;
 import com.bixi.bixi.Pojos.Oferta;
 import com.bixi.bixi.Pojos.Products;
 import com.bixi.bixi.Pojos.ProductsSearch;
@@ -34,20 +33,6 @@ public class HomeInteractorImpl implements HomeInteractor {
     public void buscarOferta(final OnHomeOfertasFinishListener listener) {
 
 
-
-        final List<Oferta> list = getOferta();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(list != null )
-                {
-                    listener.ofertasCargadas(list);
-                }else
-                    listener.ofertasError();
-            }
-        }, 1000);
-
-
     }
 
     @Override
@@ -59,26 +44,105 @@ public class HomeInteractorImpl implements HomeInteractor {
                 {
                     if(response.body().getSceResponseCode() == 0)
                     {
-                        Log.e("Products Respuesta",response.body().getSceResponseMsg());
                         listener.ofertasCargadasFromServer(response.body());
                     }else
                     {
-                        Log.e("Products Respuesta",response.body().getSceResponseMsg());
+
                     }
 
                 }else
                 {
 
                     if(response != null && response.body() != null && response.body().getSceResponseMsg() != null)
-                        Log.e("Products Respuesta",response.body().getSceResponseMsg());
+                    {
+
+                    }
+
                 }
             }
 
             @Override
             public void onFailure(Call<ProductsJson> call, Throwable t) {
-                Log.e("Products Error",t.getMessage());
+
             }
         });
+    }
+
+    @Override
+    public void loadProductsFavoritosFromServer(String token, final OnHomeOfertasFinishListener listener) {
+        service.getLiketItOffers(token).enqueue(new Callback<ProductsLiketItJson>() {
+            @Override
+            public void onResponse(Call<ProductsLiketItJson> call, Response<ProductsLiketItJson> response) {
+                if(response.isSuccessful())
+                {
+                    if(response.body().getSceResponseCode() == 0)
+                    {
+                        listener.ofertasLiketItCargadasFromServer(response.body());
+                    }else
+                    {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductsLiketItJson> call, Throwable t) {
+
+            }
+        });
+    }
+
+    @Override
+    public void likeOffer(String token, ResultProductsLikerItJson obj, final OnHomeOfertasFinishListener listener, final int position) {
+        service.setOfferLikeIt(token,obj).enqueue(new Callback<ProductsLiketItJson>() {
+            @Override
+            public void onResponse(Call<ProductsLiketItJson> call, Response<ProductsLiketItJson> response) {
+
+                if(response.isSuccessful())
+                {
+                    if(response.body().getSceResponseCode() == 0)
+                    {
+                        listener.ofertasLiketSuccesfully(true, position);
+                    }else
+                    {
+                        listener.ofertasLiketSuccesfully(false, position);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductsLiketItJson> call, Throwable t) {
+                    listener.ofertasLiketSuccesfully(false, position);
+            }
+        });
+    }
+
+    @Override
+    public void dislikeOffer(String token, ResultProductsLikerItJson obj, final OnHomeOfertasFinishListener listener, final int position) {
+        service.setOfferDislike(token,obj).enqueue(new Callback<ProductsLiketItJson>() {
+            @Override
+            public void onResponse(Call<ProductsLiketItJson> call, Response<ProductsLiketItJson> response) {
+                if(response.isSuccessful())
+                {
+                    if(response.isSuccessful())
+                    {
+                        if(response.body().getSceResponseCode() == 0)
+                        {
+                            listener.ofertasDislikeSuccesfully(true,position);
+                        }else
+                        {
+                            listener.ofertasDislikeSuccesfully(false, position);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductsLiketItJson> call, Throwable t) {
+                listener.ofertasDislikeSuccesfully(false, position);
+            }
+        });
+
     }
 
 

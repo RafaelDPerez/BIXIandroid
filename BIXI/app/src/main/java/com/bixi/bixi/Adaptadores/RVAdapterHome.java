@@ -112,6 +112,20 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
                     }
                 }
             });
+
+            holder.imgLiket.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemListener.recyclerViewLiketItem(v,position,oferta.get(position));
+                }
+            });
+
+            holder.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemListener.recyclerViewListClicked(v,position,oferta.get(posi));
+                }
+            });
         }
         holder.bind(oferta.get(position));
 
@@ -148,6 +162,9 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
         @BindView(R.id.imageView4)
         ImageView imgGoLeft;
 
+        @BindView(R.id.imageView2)
+        ImageView imgLiket;
+
         private ResultProductsJson resultProductsJson;
 
 
@@ -164,6 +181,7 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
             resultProductsJson = item;
             // Update the ViewHolder to the item's specifications.
         }
+
 
 
         @Override
