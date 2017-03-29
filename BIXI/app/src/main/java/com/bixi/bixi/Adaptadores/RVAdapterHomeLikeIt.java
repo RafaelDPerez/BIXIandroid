@@ -31,9 +31,11 @@ public class RVAdapterHomeLikeIt extends RecyclerView.Adapter<RVAdapterHomeLikeI
     Context context;
     LayoutInflater inflater;
     private static RecyclerViewClickListenerHome itemListener;
+    private static boolean likeIt = false;
 
     public RVAdapterHomeLikeIt(List<ResultProductsLikerItJson> oferta, Activity context, RecyclerViewClickListenerHome itemListener)
     {
+        this.likeIt = likeIt;
         this.oferta = oferta;
         this.context = context;
         this.itemListener = itemListener;
@@ -75,12 +77,17 @@ public class RVAdapterHomeLikeIt extends RecyclerView.Adapter<RVAdapterHomeLikeI
             holder.imgGoLeft.setVisibility(View.INVISIBLE);
             holder.imgGoRight.setVisibility(View.INVISIBLE);
 
+            holder.imgLike.setImageResource(R.mipmap.likeit);
+
             holder.imgLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                 itemListener.recyclerViewRemoveItem(v,position);
                 }
             });
+            if(obj.getPoints() != null)
+                holder.tvBixiPoints.setText(obj.getPoints()+"B");
+
         }
     }
 
@@ -118,6 +125,9 @@ public class RVAdapterHomeLikeIt extends RecyclerView.Adapter<RVAdapterHomeLikeI
 
         @BindView(R.id.imageView2)
         ImageView imgLike;
+
+        @BindView(R.id.tvBixiPoints)
+        TextView tvBixiPoints;
 
         private ResultProductsLikerItJson resultProductsJson;
 

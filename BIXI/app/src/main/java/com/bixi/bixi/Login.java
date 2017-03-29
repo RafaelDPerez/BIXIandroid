@@ -322,6 +322,7 @@ public class Login extends AppCompatActivity implements
     @Override
     public void navigateToHome() {
         Intent i = new Intent(Login.this, homeDrawable.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         i.putExtra(Constants.extraToken,token);
         startActivity(i);
     }

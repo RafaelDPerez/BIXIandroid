@@ -66,11 +66,9 @@ public class RVAdapterMenu extends RecyclerView.Adapter<RVAdapterMenu.MenuViewHo
                 else if(menuPojo.getLabelIcon().equals("3"))
                     holder.labelIcon.setImageResource(R.drawable.google_maps);
                 else if(menuPojo.getLabelIcon().equals("4"))
-                    holder.labelIcon.setImageResource(R.drawable.settings);
+                    holder.labelIcon.setImageResource(R.drawable.table_edit);
                 else if(menuPojo.getLabelIcon().equals("5"))
                     holder.labelIcon.setImageResource(R.drawable.exit_to_app);
-                else if(menuPojo.getLabelIcon().equals("6"))
-                    holder.labelIcon.setImageResource(R.drawable.table_edit);
                 else
                 {
 
