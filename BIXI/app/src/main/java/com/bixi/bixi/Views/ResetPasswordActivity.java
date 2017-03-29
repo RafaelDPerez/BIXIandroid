@@ -91,6 +91,12 @@ public class ResetPasswordActivity extends AppCompatActivity implements GeneralI
                         finish();
                     }
                 });
+        builder1.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                finish();
+            }
+        });
         AlertDialog alert11 = builder1.create();
         alert11.show();
     }

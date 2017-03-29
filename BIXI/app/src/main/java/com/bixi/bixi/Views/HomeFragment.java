@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,6 +91,7 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
         loadView(inflater,container);
         ButterKnife.bind(this,view);
         presenter = new HomePresenterImpl(this);
+
         return view;
     }
 
@@ -153,6 +155,12 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
         super.onStart();
  //       presenter.cargarOfertas();
  //           presenter.cargarProductsFromServer("botella");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     private void onClickFabs()

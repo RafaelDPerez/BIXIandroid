@@ -2,12 +2,15 @@ package com.bixi.bixi.Adaptadores;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bixi.bixi.Interfaces.RecyclerViewClickListener;
@@ -16,6 +19,7 @@ import com.bixi.bixi.Pojos.ObjSearchProducts.ResultProductsJson;
 import com.bixi.bixi.Pojos.Oferta;
 import com.bixi.bixi.Pojos.Result;
 import com.bixi.bixi.R;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -53,15 +57,27 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
         return ovh;
     }
 
-    private void loadImage(ImageView img, String url)
+    private void loadImage(ImageView img, String url,final ProgressBar pbar)
     {
         Picasso.with(context)
                 .load(url)
                 .fit()
                 .placeholder(R.color.colorAccent)
                 .error(R.color.colorAccent)
-                .into(img);
+                .into(img, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        pbar.setVisibility(View.INVISIBLE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        pbar.setVisibility(View.INVISIBLE);
+                    }
+                });
     }
+
+
 
     @Override
     public void onBindViewHolder(final RVAdapterHome.OfertaViewHolder holder, final int position) {
@@ -81,7 +97,11 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
 
             String url = oferta.get(position).getProducts().get(0).getImages().get(0);
             oferta.get(position).setOferDisplay(0);
-            loadImage(holder.imageView,url);
+
+            holder.pb.getIndeterminateDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY);
+
+            loadImage(holder.imageView,url,holder.pb);
+            holder.tvBixiPoints.setText(oferta.get(position).getProducts().get(0).getPoints()+"B");
 
             final int posi = position;
 
@@ -93,8 +113,9 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
                     {
                         int currentPosition = oferta.get(position).getOferDisplay();
                         currentPosition ++;
-                        loadImage(holder.imageView,oferta.get(posi).getProducts().get(currentPosition).getImages().get(0));
+                        loadImage(holder.imageView,oferta.get(posi).getProducts().get(currentPosition).getImages().get(0),holder.pb);
                         oferta.get(position).setOferDisplay(currentPosition);
+                        holder.tvBixiPoints.setText(oferta.get(posi).getProducts().get(currentPosition).getPoints()+"B");
                     }
 
                 }
@@ -107,11 +128,14 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
                     {
                         int currentPosition = oferta.get(position).getOferDisplay();
                         currentPosition --;
-                        loadImage(holder.imageView,oferta.get(posi).getProducts().get(currentPosition).getImages().get(0));
+                        loadImage(holder.imageView,oferta.get(posi).getProducts().get(currentPosition).getImages().get(0),holder.pb);
                         oferta.get(position).setOferDisplay(currentPosition);
+                        holder.tvBixiPoints.setText(oferta.get(posi).getProducts().get(currentPosition).getPoints()+"B");
                     }
                 }
             });
+
+
 
             holder.imgLiket.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -164,6 +188,12 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
 
         @BindView(R.id.imageView2)
         ImageView imgLiket;
+
+        @BindView(R.id.tvBixiPoints)
+        TextView tvBixiPoints;
+
+        @BindView(R.id.progressBar3)
+        ProgressBar pb;
 
         private ResultProductsJson resultProductsJson;
 

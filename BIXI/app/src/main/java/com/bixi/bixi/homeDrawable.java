@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -70,9 +71,33 @@ public class homeDrawable extends AppCompatActivity
         initializeRV();
         navigationView.setNavigationItemSelectedListener(this);
 
-        if(actual_Fragment == null)
-            getFragmentHome();
     }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(actual_Fragment == null)
+        {
+            getFragmentHome();
+            Log.d("Fragment null?","si");
+        }else
+        {
+            Fragment fg = actual_Fragment;
+            actual_Fragment = null;
+            if(fg instanceof HomeProfileFragment)
+                getFragmenProfile();
+            else if(fg instanceof HomeLikeIt)
+                getFragmentHomeLikeIt();
+            else if(fg instanceof TransaccionesFragment)
+                launchHistorical();
+            else
+                getFragmentHome();
+
+        }
+
+    }
+
+
 
     private void initializeRV()
     {
@@ -92,16 +117,14 @@ public class homeDrawable extends AppCompatActivity
         menu.add(pojo1);
         SimpleMenuPojo pojo2 = new SimpleMenuPojo("Mi Perfil","1");
         menu.add(pojo2);
-        SimpleMenuPojo pojo3 = new SimpleMenuPojo("Ofertas que me gustaron","2");
+        SimpleMenuPojo pojo3 = new SimpleMenuPojo("Ofertas que me gustan","2");
         menu.add(pojo3);
         SimpleMenuPojo pojo4 = new SimpleMenuPojo("Ofertas cerca de mi","3");
         menu.add(pojo4);
-        SimpleMenuPojo pojo5 = new SimpleMenuPojo("Configuración","4");
+        SimpleMenuPojo pojo5 = new SimpleMenuPojo("Transacciónes","4");
         menu.add(pojo5);
         SimpleMenuPojo pojo6 = new SimpleMenuPojo("Salir","5");
         menu.add(pojo6);
-        SimpleMenuPojo pojo7 = new SimpleMenuPojo("Transacciónes","6");
-        menu.add(pojo7);
         return menu;
     }
 
@@ -165,10 +188,10 @@ public class homeDrawable extends AppCompatActivity
             getFragmentHomeLikeIt();
         else if(position == 3)
             launchMapsActivity();
+        else if(position == 4)
+            launchHistorical();
         else if(position == 5)
             logout();
-        else if(position == 6)
-            launchHistorical();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -222,7 +245,7 @@ public class homeDrawable extends AppCompatActivity
             if(actual_Fragment != null)
                 ft.remove(actual_Fragment);
             actual_Fragment = fg;
-            ft.replace(R.id.details,fg);
+            ft.replace(R.id.details,fg,"fg");
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.commit();
         }
