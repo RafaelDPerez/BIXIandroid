@@ -130,7 +130,7 @@ public class TransaccionesFragment extends Fragment implements TransaccionesFrag
         List<ResultHistoricalPojo> obj = pojo.getResult();
         if(obj != null && obj.size() > 0)
         {
-            RVAdapterTransacciones adapter = new RVAdapterTransacciones(obj,getActivity());
+            RVAdapterTransacciones adapter = new RVAdapterTransacciones(obj,getInstance().getActivity());
             rv.setAdapter(adapter);
         }
 

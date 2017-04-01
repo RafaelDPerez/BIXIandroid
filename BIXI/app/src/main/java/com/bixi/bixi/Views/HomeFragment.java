@@ -186,6 +186,9 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
     public void hideProgress() {
         bar.setVisibility(View.GONE);
         rv.setVisibility(View.VISIBLE);
+
+        if(swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -242,7 +245,7 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
 
         }
         result = this.productsJson.getResult();
-        RVAdapterHome adapter = new RVAdapterHome(result,getActivity(),this);
+        RVAdapterHome adapter = new RVAdapterHome(result,getInstance().getActivity(),this);
         rv.setAdapter(adapter);
 
         if(swipeRefreshLayout.isRefreshing())

@@ -100,8 +100,19 @@ public class HomePresenterImpl implements HomePresenter, OnHomeOfertasFinishList
 
     @Override
     public void ofertasError() {
-        view.hideProgress();
-        view.setError();
+        if(view != null)
+        {
+            view.hideProgress();
+            view.setError();
+        }else if(viewMaps != null)
+        {
+
+        }else if(viewLikeIt != null)
+        {
+            viewLikeIt.hideProgress();
+            viewLikeIt.setError();
+        }
+
     }
 
     @Override
