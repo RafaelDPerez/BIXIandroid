@@ -47,7 +47,7 @@ public class HomeInteractorImpl implements HomeInteractor {
                         listener.ofertasCargadasFromServer(response.body());
                     }else
                     {
-
+                        listener.ofertasError();
                     }
 
                 }else
@@ -55,7 +55,7 @@ public class HomeInteractorImpl implements HomeInteractor {
 
                     if(response != null && response.body() != null && response.body().getSceResponseMsg() != null)
                     {
-
+                        listener.ofertasError();
                     }
 
                 }
@@ -63,7 +63,7 @@ public class HomeInteractorImpl implements HomeInteractor {
 
             @Override
             public void onFailure(Call<ProductsJson> call, Throwable t) {
-
+                listener.ofertasError();
             }
         });
     }
@@ -80,14 +80,17 @@ public class HomeInteractorImpl implements HomeInteractor {
                         listener.ofertasLiketItCargadasFromServer(response.body());
                     }else
                     {
-
+                        listener.ofertasError();
                     }
+                }else
+                {
+                    listener.ofertasError();
                 }
             }
 
             @Override
             public void onFailure(Call<ProductsLiketItJson> call, Throwable t) {
-
+                listener.ofertasError();
             }
         });
     }

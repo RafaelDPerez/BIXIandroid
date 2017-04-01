@@ -13,8 +13,8 @@
         android:layout_width="124dp"
         android:layout_height="124dp"
         android:layout_marginTop="30dp"
-        android:src="@drawable/profile"
-        app:civ_border_color="#FF000000"
+        android:src="@color/colorAccent"
+        app:civ_border_color="@color/colorAccent"
         app:civ_border_width="2dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -61,6 +61,8 @@
             -->
     </LinearLayout>
 
+
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constNew"
         android:layout_width="0dp"
@@ -71,19 +73,9 @@
         android:background="@color/colorAccent"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
-        app:layout_constraintHorizontal_bias="0.0">
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginBottom="-56dp">
 
-        <ViewFlipper
-            android:layout_width="344dp"
-            android:layout_height="234dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_constraintLeft_creator="1"
-            tools:layout_constraintTop_creator="1"
-            android:layout_marginRight="0dp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="0dp" />
 
         <include layout="@layout/include_profile_user_info" />
 
@@ -101,6 +93,19 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:srcCompat="@drawable/camera" />
+
+    <ProgressBar
+        android:id="@+id/progressBar4"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/constNew"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/constNew"
+        app:layout_constraintTop_toTopOf="@+id/constNew"
+        android:layout_marginTop="59dp"
+        app:layout_constraintHorizontal_bias="0.498" />
 
 
 </android.support.constraint.ConstraintLayout>

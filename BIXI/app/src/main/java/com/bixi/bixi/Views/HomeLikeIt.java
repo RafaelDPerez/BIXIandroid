@@ -156,7 +156,7 @@ public class HomeLikeIt extends Fragment implements HomeView,RecyclerViewClickLi
             resultProductsLikerItJson = (ArrayList<ResultProductsLikerItJson>) productsLiketItJson.getResult();
 
 
-        adapter = new RVAdapterHomeLikeIt(resultProductsLikerItJson,getActivity(),this);
+        adapter = new RVAdapterHomeLikeIt(resultProductsLikerItJson,getInstance().getActivity(),this);
         rv.setAdapter(adapter);
         if(swipeRefreshLayout.isRefreshing())
             swipeRefreshLayout.setRefreshing(false);

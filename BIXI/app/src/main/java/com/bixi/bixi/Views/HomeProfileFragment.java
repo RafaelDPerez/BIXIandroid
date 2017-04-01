@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +73,12 @@ public class HomeProfileFragment extends Fragment implements HomeProfileView, Ge
 
     @BindView(R.id.profile_image)
     CircleImageView imgProfileImage;
+
+    @BindView(R.id.progressBar4)
+    ProgressBar pb;
+
+ @BindView(R.id.constNew)
+    ConstraintLayout constraintLayout;
 
     private static HomeProfileFragment instance;
     private View view;
@@ -256,7 +264,8 @@ public class HomeProfileFragment extends Fragment implements HomeProfileView, Ge
 
     @Override
     public void showProgress() {
-
+        pb.setVisibility(View.VISIBLE);
+        constraintLayout.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -271,6 +280,7 @@ public class HomeProfileFragment extends Fragment implements HomeProfileView, Ge
 
     @Override
     public void hideProgress() {
-
+        constraintLayout.setVisibility(View.VISIBLE);
+            pb.setVisibility(View.INVISIBLE);
     }
 }

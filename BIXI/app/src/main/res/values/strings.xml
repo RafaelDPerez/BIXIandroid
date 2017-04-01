@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BIXI</string>
+    <string name="app_name">BIXI Loyalty</string>
     <string name="email">email</string>
     <string name="contraseña">contraseña</string>
     <string name="olvidoContrasena">¿Olvidó su contraseña?</string>
