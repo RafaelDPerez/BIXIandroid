@@ -1,5 +1,6 @@
 package com.bixi.bixi.Network;
 
+import com.bixi.bixi.Pojos.Combos.ComboGeneralPojo;
 import com.bixi.bixi.Pojos.CreateUserResponse;
 import com.bixi.bixi.Pojos.HistorialPojo;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsJson;
@@ -62,5 +63,8 @@ public interface UserService {
 
     @POST("historical")
     Call<HistorialPojo> getHistorical(@Header("X-Request-Id")String token);
+
+    @GET("type_commerce_list")
+    Call<ComboGeneralPojo>getTyppeCommerceList();
 }
 

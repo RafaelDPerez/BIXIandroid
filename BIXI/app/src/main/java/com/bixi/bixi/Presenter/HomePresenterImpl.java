@@ -12,6 +12,7 @@ import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsLiketItJson;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ResultProductsLikerItJson;
 import com.bixi.bixi.Pojos.Oferta;
 import com.bixi.bixi.Pojos.ProductsSearch;
+import com.bixi.bixi.Views.DetailActivity;
 import com.bixi.bixi.Views.HomeFragment;
 import com.bixi.bixi.Views.HomeLikeIt;
 
@@ -27,6 +28,7 @@ public class HomePresenterImpl implements HomePresenter, OnHomeOfertasFinishList
     HomeFragment view;
     HomeLikeIt viewLikeIt;
     MapsActivity viewMaps;
+    DetailActivity viewDetail;
 
     public HomePresenterImpl(HomeView view) {
      //   this.view = view;
@@ -45,6 +47,12 @@ public class HomePresenterImpl implements HomePresenter, OnHomeOfertasFinishList
     public HomePresenterImpl(MapsActivity view)
     {
         this.viewMaps = view;
+        injectService();
+    }
+
+    public HomePresenterImpl(DetailActivity view)
+    {
+        this.viewDetail = view;
         injectService();
     }
 
@@ -68,6 +76,24 @@ public class HomePresenterImpl implements HomePresenter, OnHomeOfertasFinishList
 
         ProductsSearch obj = new ProductsSearch();
         obj.setSearch("");
+        iteractor.loadProductsFromServer(obj,this);
+    }
+
+    @Override
+    public void cargarProductsFromServer(String search, String ubicacionId, String ordenarPor, String isOffer, int pointFrom, int pointTo) {
+        if(view != null)
+            view.showProgress();
+        if(viewMaps != null)
+            viewMaps.showProgress();
+
+        ProductsSearch obj = new ProductsSearch();
+        obj.setSearch(search);
+        if(ubicacionId != null && !ubicacionId.equals("") && !ubicacionId.equals("-999"))
+            obj.setType_commerce_id(Integer.valueOf(ubicacionId));
+        obj.setOrder_by(ordenarPor);
+        obj.setIs_ofer(isOffer);
+        obj.setPoint_to(pointTo);
+        obj.setPoint_from(pointFrom);
         iteractor.loadProductsFromServer(obj,this);
     }
 
@@ -136,7 +162,10 @@ public class HomePresenterImpl implements HomePresenter, OnHomeOfertasFinishList
 
     @Override
     public void ofertasLiketSuccesfully(boolean success,int position) {
-        view.updateRV(success,position);
+        if(view != null)
+            view.updateRV(success,position);
+        else if(viewMaps != null)
+            viewMaps.updateRV(success,position);
     }
 
     @Override

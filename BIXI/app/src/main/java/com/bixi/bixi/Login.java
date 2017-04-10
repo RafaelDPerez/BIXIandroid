@@ -25,6 +25,7 @@ import com.bixi.bixi.Presenter.LoginPresenterImpl;
 import com.bixi.bixi.Utility.Constants;
 import com.bixi.bixi.Views.HomeActivity;
 import com.bixi.bixi.Views.AddUserActivity;
+import com.bixi.bixi.bixi.basics.ApplyCustomFont;
 import com.bixi.bixi.bixi.basics.RecuperarContrasena;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -99,6 +100,8 @@ public class Login extends AppCompatActivity implements
             Log.e("Token existente: ",token);
         else
             Log.e("No existe Token","");
+
+        ApplyCustomFont.applyFont(this,findViewById(R.id.activity_main),"fonts/Corbel.ttf");
     }
 
 

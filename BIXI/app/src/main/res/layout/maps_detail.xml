@@ -1,0 +1,45 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_add_user"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.bixi.bixi.MapsActivity"
+    tools:showIn="@layout/activity_maps">
+
+<fragment
+    android:id="@+id/map"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:name="com.google.android.gms.maps.SupportMapFragment"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:fitsSystemWindows="true"
+    app:layout_constraintTop_toTopOf="parent"
+    android:layout_marginTop="0dp"
+    android:layout_marginRight="0dp"
+    app:layout_constraintRight_toRightOf="parent"
+    android:layout_marginLeft="0dp"
+    app:layout_constraintLeft_toLeftOf="parent"
+    android:layout_marginBottom="0dp"
+    app:layout_constraintBottom_toTopOf="@+id/button2">
+
+</fragment>
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/reclamarOferta"
+        android:textColor="@color/colorAccent"
+        android:gravity="left|center"
+        android:paddingLeft="16dp"
+        android:visibility="gone"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/purpleBixi"
+        android:layout_marginBottom="0dp" />
+</android.support.constraint.ConstraintLayout>

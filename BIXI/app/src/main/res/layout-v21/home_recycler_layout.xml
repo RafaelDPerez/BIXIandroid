@@ -5,6 +5,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingBottom="8dp"
+    android:layout_margin="16dp"
+    android:id="@+id/home_recycler_id"
     >
 
 
@@ -35,7 +37,7 @@
         <ImageView
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_margin="24dp"
+            android:layout_margin="4dp"
             app:srcCompat="@drawable/heart_outline"
             android:layout_gravity="right|top"
             android:id="@+id/imageView2" />
@@ -67,6 +69,7 @@
             android:textSize="18sp"
             android:layout_marginBottom="25dp"
             android:layout_gravity="center_horizontal|clip_vertical|bottom|start"
+            android:visibility="gone"
             android:textStyle="bold"/>
 
         <ProgressBar

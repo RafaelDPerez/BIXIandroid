@@ -21,6 +21,13 @@
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
 
+            <ImageView
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_gravity="center"
+                android:contentDescription=""
+                android:src="@mipmap/logo2" />
+
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>

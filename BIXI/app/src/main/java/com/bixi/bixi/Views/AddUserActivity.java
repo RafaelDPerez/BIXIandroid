@@ -3,10 +3,13 @@ package com.bixi.bixi.Views;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,6 +22,7 @@ import com.bixi.bixi.Network.Injector;
 import com.bixi.bixi.Pojos.UserCreate;
 import com.bixi.bixi.Presenter.AddUserPresenterImpl;
 import com.bixi.bixi.R;
+import com.bixi.bixi.bixi.basics.ApplyCustomFont;
 
 import java.util.Calendar;
 
@@ -26,7 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddUserActivity extends AppCompatActivity implements AddUserView {
+public class AddUserActivity extends AppCompatActivity implements AddUserView,DatePickerDialog.OnDateSetListener {
 
     @BindView(R.id.vf)
     ViewFlipper vf;
@@ -66,6 +70,7 @@ public class AddUserActivity extends AppCompatActivity implements AddUserView {
     AddUserPresenter presenter;
     int year, month,day;
     private int DIALOG_ID = 0;
+    private DatePickerDialog datePickerDialog;
 
 
     @Override
@@ -73,14 +78,28 @@ public class AddUserActivity extends AppCompatActivity implements AddUserView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_user);
         inicializaciones();
+        makeNoLimits();
         edtEdad.setFocusable(false);
         edtEdad.setClickable(true);
+        edtSexo.setFocusable(false);
+        edtSexo.setClickable(false);
+    }
+
+    private void makeNoLimits()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window w = getWindow(); // in Activity's onCreate() for instance
+            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+
+        }
     }
 
     private void inicializaciones()
     {
         ButterKnife.bind(this);
         presenter = new AddUserPresenterImpl(this, Injector.provideCreateUserService());
+        ApplyCustomFont.applyFont(this,findViewById(R.id.vf),"fonts/Corbel.ttf");
     }
 
     @OnClick(R.id.imgAddUserGo)
@@ -125,7 +144,7 @@ public class AddUserActivity extends AppCompatActivity implements AddUserView {
     void datePicker()
     {
         setCurrentDate();
-        showDialog(DIALOG_ID);
+  //      showDialog(DIALOG_ID);
     }
 
     private void setCurrentDate()
@@ -134,22 +153,13 @@ public class AddUserActivity extends AppCompatActivity implements AddUserView {
         year = cal.get(Calendar.YEAR);
         month = cal.get(Calendar.MONTH);
         day = cal.get(Calendar.DAY_OF_MONTH);
+
+        datePickerDialog = new DatePickerDialog(
+                this,R.style.DialogTheme, AddUserActivity.this, year, month, day);
+        datePickerDialog.show();
     }
 
-    protected Dialog onCreateDialog(int id)
-    {
-       if(id == DIALOG_ID)
-           return new DatePickerDialog(this,dpickerListener,year,month,day);
-        return null;
-    }
 
-    private DatePickerDialog.OnDateSetListener dpickerListener
-            = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            edtEdad.setText(dayOfMonth+"/"+(monthOfYear+1)+"/"+year);
-        }
-    };
 
     private String getEditTextStringFormatted(EditText editText)
     {
@@ -166,6 +176,18 @@ public class AddUserActivity extends AppCompatActivity implements AddUserView {
     public void showProgress() {
         progressBar.setVisibility(View.VISIBLE);
         go2.setVisibility(View.INVISIBLE);
+    }
+
+    @OnClick(R.id.btnM)
+    void setGenderM()
+    {
+        edtSexo.setText("M");
+    }
+
+    @OnClick(R.id.btnF)
+    void setGenderF()
+    {
+        edtSexo.setText("F");
     }
 
     @Override
@@ -255,5 +277,10 @@ public class AddUserActivity extends AppCompatActivity implements AddUserView {
                 });
         AlertDialog alert11 = builder1.create();
         alert11.show();
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        edtEdad.setText(dayOfMonth+"/"+(month+1)+"/"+year);
     }
 }

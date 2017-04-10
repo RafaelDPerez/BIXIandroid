@@ -2,6 +2,7 @@ package com.bixi.bixi.Adaptadores;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,11 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bixi.bixi.Interfaces.RecyclerViewClickListenerHome;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ResultProductsLikerItJson;
 import com.bixi.bixi.R;
+import com.bixi.bixi.bixi.basics.ApplyCustomFont;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -47,17 +51,28 @@ public class RVAdapterHomeLikeIt extends RecyclerView.Adapter<RVAdapterHomeLikeI
     public OfertasLikeItViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_recycler_layout, parent, false);
         OfertasLikeItViewHolder ovh = new OfertasLikeItViewHolder(v);
+        ApplyCustomFont.applyFont(context,v.findViewById(R.id.home_recycler_id),"fonts/Corbel.ttf");
         return ovh;
     }
 
-    private void loadImage(ImageView img, String url)
+    private void loadImage(ImageView img, String url,final ProgressBar pbar)
     {
         Picasso.with(context)
                 .load(url)
                 .fit()
                 .placeholder(R.color.colorAccent)
                 .error(R.color.colorAccent)
-                .into(img);
+                .into(img, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        pbar.setVisibility(View.INVISIBLE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        pbar.setVisibility(View.INVISIBLE);
+                    }
+                });
     }
 
 
@@ -66,14 +81,17 @@ public class RVAdapterHomeLikeIt extends RecyclerView.Adapter<RVAdapterHomeLikeI
         ResultProductsLikerItJson obj = oferta.get(position);
         if(obj != null)
         {
+            holder.pb.getIndeterminateDrawable().setColorFilter(context.getResources().getColor(R.color.purpleBixi2), PorterDuff.Mode.MULTIPLY);
+            holder.pb.setVisibility(View.VISIBLE);
+
             if(obj.getDescription() != null)
                 holder.descripcion.setText(obj.getDescription());
             if(obj.getName() != null)
                 holder.titulo.setText(obj.getName());
             if(obj.getImages() != null && obj.getImages().size() > 0)
-                loadImage(holder.imageView,obj.getImages().get(0));
+                loadImage(holder.imageView,obj.getImages().get(0),holder.pb);
             else
-                loadImage(holder.imageView,"http://static.viagrupo.com/userupload/vargas01-04.png");
+                loadImage(holder.imageView,"http://static.viagrupo.com/userupload/vargas01-04.png",holder.pb);
             holder.imgGoLeft.setVisibility(View.INVISIBLE);
             holder.imgGoRight.setVisibility(View.INVISIBLE);
 
@@ -128,6 +146,9 @@ public class RVAdapterHomeLikeIt extends RecyclerView.Adapter<RVAdapterHomeLikeI
 
         @BindView(R.id.tvBixiPoints)
         TextView tvBixiPoints;
+
+        @BindView(R.id.progressBar3)
+        ProgressBar pb;
 
         private ResultProductsLikerItJson resultProductsJson;
 

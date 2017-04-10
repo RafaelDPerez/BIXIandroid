@@ -56,6 +56,9 @@ public class HomeInteractorImpl implements HomeInteractor {
                     if(response != null && response.body() != null && response.body().getSceResponseMsg() != null)
                     {
                         listener.ofertasError();
+                    }else
+                    {
+                        listener.ofertasError();
                     }
 
                 }

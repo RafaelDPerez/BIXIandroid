@@ -23,7 +23,7 @@
 
     <string name="faltanCampos">Favor completar todos los campos del formulario.</string>
 
-    <string name="reclamarOferta">reclamar oferta</string>
+    <string name="reclamarOferta">RECLAMAR OFERTA</string>
     <string name="title_activity_home_drawable">homeDrawable</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -35,5 +35,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="animation_img">Animation Img</string>
+    <string name="title_activity_test">test</string>
 
 </resources>

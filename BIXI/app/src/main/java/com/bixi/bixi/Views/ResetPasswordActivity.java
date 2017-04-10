@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.bixi.bixi.Interfaces.GeneralInterface;
@@ -14,6 +16,7 @@ import com.bixi.bixi.Pojos.Result;
 import com.bixi.bixi.Presenter.ResetPasswordPresenterImpl;
 import com.bixi.bixi.R;
 import com.bixi.bixi.Utility.Constants;
+import com.bixi.bixi.bixi.basics.ApplyCustomFont;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,10 +41,27 @@ public class ResetPasswordActivity extends AppCompatActivity implements GeneralI
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setTitle("");
+        }
         inicializaciones();
         getExtras();
 
+        ApplyCustomFont.applyFont(this,findViewById(R.id.reset_password_id),"fonts/Corbel.ttf");
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void getExtras()

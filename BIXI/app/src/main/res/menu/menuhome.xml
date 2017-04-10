@@ -4,6 +4,6 @@
         android:id="@+id/mybutton"
         android:title="Buscar"
         app:showAsAction="always"
-        android:icon="@drawable/file_find"
+        android:icon="@mipmap/lupa"
         />
 </menu>

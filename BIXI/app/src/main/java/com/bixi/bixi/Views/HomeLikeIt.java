@@ -31,6 +31,7 @@ import com.bixi.bixi.Presenter.HomePresenterImpl;
 import com.bixi.bixi.R;
 import com.bixi.bixi.Utility.Constants;
 import com.github.clans.fab.FloatingActionMenu;
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,12 +93,20 @@ public class HomeLikeIt extends Fragment implements HomeView,RecyclerViewClickLi
         if(extras != null){
             token = extras.getString(Constants.extraToken);
         }
+
+        rv.addItemDecoration(
+                new HorizontalDividerItemDecoration.Builder(getActivity())
+                        .color(Color.GRAY)
+                        .margin(50)
+                        .build());
+
         rv.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(llm);
 
         bar.setVisibility(View.GONE);
         rv.setVisibility(View.VISIBLE);
+
         bar.getIndeterminateDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY);
         presenter.cargarProductosFavoritosFromServer(token);
         swipeRefreshRV();
@@ -137,7 +146,9 @@ public class HomeLikeIt extends Fragment implements HomeView,RecyclerViewClickLi
 
     @Override
     public void setError() {
-        Toast.makeText(getActivity(),"No ha sido posible cargar las ofertas",Toast.LENGTH_SHORT);
+     //   Toast.makeText(getActivity(),"No ha sido posible cargar las ofertas",Toast.LENGTH_SHORT).show();
+        if(swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -148,6 +159,12 @@ public class HomeLikeIt extends Fragment implements HomeView,RecyclerViewClickLi
     @Override
     public void operacionExitosaFromServer(ProductsJson productsJson) {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    //    presenter.cargarProductosFavoritosFromServer(token);
     }
 
     @Override
@@ -194,14 +211,16 @@ public class HomeLikeIt extends Fragment implements HomeView,RecyclerViewClickLi
         i.putExtra("url",url);
         i.putExtra("detalle",obj.getDescription());
         i.putExtra("bixiPoints",obj.getPoints());
+        i.putExtra(Constants.extraToken,token);
 
-
+/*
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {
             String animationName = getActivity().getString(R.string.animation_img);
             ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),v,animationName);
             startActivity(i,activityOptionsCompat.toBundle());
         }else
+        */
             startActivity(i);
     }
 
