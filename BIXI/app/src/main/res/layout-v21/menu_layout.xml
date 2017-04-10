@@ -3,14 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="40dp"
     android:padding="4dp"
     android:foreground="?attr/selectableItemBackground"
+    android:id="@+id/menu_layout_id"
     android:stateListAnimator="@animator/raise">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
         >
 
@@ -18,7 +19,7 @@
         <ImageView
             android:id="@+id/imageViewLabelIcon_Menu"
             android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:srcCompat="@drawable/heart_outline_white"
             />
 
@@ -34,7 +35,7 @@
         <ImageView
             android:id="@+id/imageViewDefaulIcon_Menu"
             android:layout_width="10dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:srcCompat="@drawable/chevron_right" />
 
 

@@ -4,8 +4,10 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -17,6 +19,7 @@ import com.bixi.bixi.Pojos.OffersPointsClaim;
 import com.bixi.bixi.Presenter.PasswordActivityPresenterImpl;
 import com.bixi.bixi.R;
 import com.bixi.bixi.Utility.Constants;
+import com.bixi.bixi.bixi.basics.ApplyCustomFont;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +43,13 @@ public class PasswordActivity extends AppCompatActivity implements GeneralInterf
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setTitle("");
+        }
         Bundle extras = getIntent().getExtras();
         if(extras != null)
         {
@@ -48,6 +58,16 @@ public class PasswordActivity extends AppCompatActivity implements GeneralInterf
         }
         inicializaciones();
         setUpTextWatcher();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void setUpTextWatcher()
@@ -78,6 +98,7 @@ public class PasswordActivity extends AppCompatActivity implements GeneralInterf
     {
         ButterKnife.bind(this);
         presenter = new PasswordActivityPresenterImpl(this);
+        ApplyCustomFont.applyFont(this,findViewById(R.id.activity_password_id),"fonts/Corbel.ttf");
     }
 
     @OnClick(R.id.btn0Password)

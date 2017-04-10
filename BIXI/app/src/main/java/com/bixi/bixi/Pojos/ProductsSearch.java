@@ -20,11 +20,30 @@ public class ProductsSearch implements Serializable {
     private float lat;
     private float lng;
 
+    private int point_from;
+    private int point_to;
+
     public ProductsSearch()
     {
 
     }
 
+
+    public int getPoint_from() {
+        return point_from;
+    }
+
+    public void setPoint_from(int point_from) {
+        this.point_from = point_from;
+    }
+
+    public int getPoint_to() {
+        return point_to;
+    }
+
+    public void setPoint_to(int point_to) {
+        this.point_to = point_to;
+    }
 
     public int getType_commerce_id() {
         return type_commerce_id;

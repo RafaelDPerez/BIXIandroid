@@ -19,6 +19,7 @@ import com.bixi.bixi.Pojos.ObjSearchProducts.ResultProductsJson;
 import com.bixi.bixi.Pojos.Oferta;
 import com.bixi.bixi.Pojos.Result;
 import com.bixi.bixi.R;
+import com.bixi.bixi.bixi.basics.ApplyCustomFont;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -52,7 +53,7 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
     public RVAdapterHome.OfertaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_recycler_layout, parent, false);
         OfertaViewHolder ovh = new OfertaViewHolder(v);
-
+        ApplyCustomFont.applyFont(context,v.findViewById(R.id.home_recycler_id),"fonts/Corbel.ttf");
 
         return ovh;
     }
@@ -90,7 +91,7 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
           //  holder.precio.setText(oferta.get(position).getPrecio());
 
             if(obj.getCommerceAddress() != null)
-                holder.descripcion.setText(obj.getCommerceAddress());
+                holder.descripcion.setText(obj.getProducts().get(0).getName());
 
             if(obj.getCommerceName() != null)
                 holder.titulo.setText(obj.getCommerceName());
@@ -98,12 +99,23 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
             String url = oferta.get(position).getProducts().get(0).getImages().get(0);
             oferta.get(position).setOferDisplay(0);
 
-            holder.pb.getIndeterminateDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY);
+            holder.pb.getIndeterminateDrawable().setColorFilter(context.getResources().getColor(R.color.purpleBixi2), PorterDuff.Mode.MULTIPLY);
+            holder.pb.setVisibility(View.VISIBLE);
 
             loadImage(holder.imageView,url,holder.pb);
             holder.tvBixiPoints.setText(oferta.get(position).getProducts().get(0).getPoints()+"B");
 
             final int posi = position;
+
+            if(oferta.get(posi).getMaxquantityOffers() == 1)
+            {
+                updateArrows(holder.imgGoLeft,false);
+                updateArrows(holder.imgGoRight,false);
+            }
+            if(oferta.get(posi).getOferDisplay() == 0)
+            {
+                updateArrows(holder.imgGoLeft,false);
+            }
 
             holder.imgGoRight.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -113,9 +125,21 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
                     {
                         int currentPosition = oferta.get(position).getOferDisplay();
                         currentPosition ++;
+                        holder.pb.setVisibility(View.VISIBLE);
+                        holder.descripcion.setText(oferta.get(posi).getProducts().get(currentPosition).getName());
                         loadImage(holder.imageView,oferta.get(posi).getProducts().get(currentPosition).getImages().get(0),holder.pb);
                         oferta.get(position).setOferDisplay(currentPosition);
                         holder.tvBixiPoints.setText(oferta.get(posi).getProducts().get(currentPosition).getPoints()+"B");
+
+                        if(oferta.get(position).getOferDisplay() == oferta.get(position).getMaxquantityOffers() - 1)
+                        {
+                            updateArrows(holder.imgGoRight,false);
+                            updateArrows(holder.imgGoLeft,true);
+                        }else
+                        {
+                            updateArrows(holder.imgGoRight,true);
+                            updateArrows(holder.imgGoLeft,true);
+                        }
                     }
 
                 }
@@ -128,9 +152,21 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
                     {
                         int currentPosition = oferta.get(position).getOferDisplay();
                         currentPosition --;
+                        holder.pb.setVisibility(View.VISIBLE);
+                        holder.descripcion.setText(oferta.get(posi).getProducts().get(currentPosition).getName());
                         loadImage(holder.imageView,oferta.get(posi).getProducts().get(currentPosition).getImages().get(0),holder.pb);
                         oferta.get(position).setOferDisplay(currentPosition);
                         holder.tvBixiPoints.setText(oferta.get(posi).getProducts().get(currentPosition).getPoints()+"B");
+
+                        if(oferta.get(position).getOferDisplay() == 0)
+                        {
+                            updateArrows(holder.imgGoRight,true);
+                            updateArrows(holder.imgGoLeft,false);
+                        }else
+                        {
+                            updateArrows(holder.imgGoRight,true);
+                            updateArrows(holder.imgGoLeft,true);
+                        }
                     }
                 }
             });
@@ -153,6 +189,14 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
         }
         holder.bind(oferta.get(position));
 
+    }
+
+    private void updateArrows(ImageView img, boolean show)
+    {
+        if(show)
+            img.setVisibility(View.VISIBLE);
+        else
+            img.setVisibility(View.INVISIBLE);
     }
 
 

@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:background="@color/tw__composer_light_gray"
+    android:id="@+id/profile_id"
     android:layout_height="match_parent">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -48,17 +49,17 @@
             android:drawableRight="@drawable/chevron_right"
             android:textColor="@color/colorAccent" />
 
-  <!--      <Button
-            android:id="@+id/buttonObtener"
+       <Button
+            android:id="@+id/btnResetPassword"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:background="@color/purpleBixi"
-            android:text="Obtener"
+            android:text="Cambiar contraseña"
             android:textStyle="bold"
             android:drawableRight="@drawable/chevron_right"
             android:textColor="@color/colorAccent" />
-            -->
+
     </LinearLayout>
 
 
@@ -106,6 +107,20 @@
         app:layout_constraintTop_toTopOf="@+id/constNew"
         android:layout_marginTop="59dp"
         app:layout_constraintHorizontal_bias="0.498" />
+
+    <ProgressBar
+        android:id="@+id/progressBarProfile"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/constNew" />
 
 
 </android.support.constraint.ConstraintLayout>

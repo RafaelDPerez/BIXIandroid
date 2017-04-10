@@ -1,8 +1,10 @@
 package com.bixi.bixi;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -11,15 +13,22 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +39,11 @@ import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsLiketItJson;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ResultProductsJson;
 import com.bixi.bixi.Pojos.Oferta;
 import com.bixi.bixi.Presenter.HomePresenterImpl;
+import com.bixi.bixi.Utility.Constants;
+import com.bixi.bixi.Views.DetailActivity;
 import com.bixi.bixi.Views.HomeLikeIt;
+import com.bixi.bixi.Views.SearchActivity;
+import com.bixi.bixi.bixi.basics.ApplyCustomFont;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -46,13 +59,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.BubbleIconFactory;
 import com.google.maps.android.ui.IconGenerator;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import android.Manifest;
 
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,HomeView,
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,HomeView,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
@@ -67,16 +82,58 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationRequest mLocationRequest;
     private Location mLastLocation;
     private Marker mCurrLocationMarker;
+    static final int SEARCH_REQUEST = 1;
+    private String token;
+    private Dialog d;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        overridePendingTransition(0, 0);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setTitle("");
+        }
+        Bundle extras = getIntent().getExtras();
+        if(extras != null)
+        {
+            token = extras.getString(Constants.extraToken);
+        }
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         presenter = new HomePresenterImpl(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menuhome, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.mybutton) {
+            // do something here
+            Intent i = new Intent(MapsActivity.this,SearchActivity.class);
+            startActivityForResult(i,SEARCH_REQUEST);
+        }else if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -151,10 +208,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void inflateCustomLayout(String tag)
     {
-        int position = Integer.parseInt(tag);
+        final int position = Integer.parseInt(tag);
 
         if(resultProductsJsons.get(position) != null)
         {
+            resultProductsJsons.get(position).setOferDisplay(0);
             String url = "";
             if(resultProductsJsons.get(position).getProducts().get(0).getImages() != null && resultProductsJsons.get(position).getProducts().get(0).getImages().size() > 0);
             {
@@ -166,11 +224,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
             String establecimiento = resultProductsJsons.get(position).getCommerceName();
-            String descripcion = resultProductsJsons.get(position).getCommerceAddress();
-            final Dialog d = new Dialog(MapsActivity.this);
+            final String descripcion = resultProductsJsons.get(position).getProducts().get(0).getName();
+             d = new Dialog(MapsActivity.this);
       //      d.requestWindowFeature(Window.FEATURE_NO_TITLE);
             d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-            d.setContentView(R.layout.home_recycler_layout);
+            d.setContentView(R.layout.home_recycler_layout_dif);
 
             WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
             lp.copyFrom(d.getWindow().getAttributes());
@@ -181,40 +239,56 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             d.getWindow().setAttributes(lp);
 
-            ImageView image = (ImageView) d.findViewById(R.id.ivOferta);
+            final ImageView image = (ImageView) d.findViewById(R.id.ivOferta);
  //           String url = "http://static.viagrupo.com/thumbs/unnamed_3_63_PNG_464x464.png";
 
-            if(url != null && !url.equals(""))
-            {
-                Picasso.with(getApplicationContext())
-                        .load(url)
-                        .fit()
-                        .placeholder(R.color.colorAccent)
-                        .error(R.color.colorAccent)
-                        .into(image);
-            }
+
 
 
             TextView txtTitulo = (TextView) d.findViewById(R.id.tvTitulo);
             txtTitulo.setText(establecimiento);
 
-            TextView txtDescripcion = (TextView) d.findViewById(R.id.tvDescripcion);
+            final TextView txtDescripcion = (TextView) d.findViewById(R.id.tvDescripcion);
             txtDescripcion.setText(descripcion);
 
-            ImageView imgGoRigh = (ImageView) d.findViewById(R.id.imageView3);
-            ImageView imgGoLeft = (ImageView) d.findViewById(R.id.imageView4);
-            ImageView imgLiketIt = (ImageView) d.findViewById(R.id.imageView2);
-            TextView tvBixiPoints = (TextView) d.findViewById(R.id.tvBixiPoints);
+            final ImageView imgGoRigh = (ImageView) d.findViewById(R.id.imageView3);
+            final ImageView imgGoLeft = (ImageView) d.findViewById(R.id.imageView4);
+            final ImageView imgLiketIt = (ImageView) d.findViewById(R.id.imageView2);
+            final TextView tvBixiPoints = (TextView) d.findViewById(R.id.tvBixiPoints);
+            final ProgressBar pb = (ProgressBar) d.findViewById(R.id.progressBar3);
 
             tvBixiPoints.setVisibility(View.INVISIBLE);
             imgLiketIt.setVisibility(View.VISIBLE);
             imgGoRigh.setVisibility(View.VISIBLE);
             imgGoLeft.setVisibility(View.VISIBLE);
 
+            paintImage(url,image,pb);
+
+            if(resultProductsJsons.get(position).getMaxquantityOffers() == 1)
+            {
+                updateArrows(imgGoLeft,false);
+                updateArrows(imgGoRigh,false);
+            }
+            if(resultProductsJsons.get(position).getOferDisplay() == 0)
+            {
+                updateArrows(imgGoLeft,false);
+            }
+
             image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
+
+                    ResultProductsJson obj = resultProductsJsons.get(position);
+                    int posiSubOfert = obj.getOferDisplay();
+                    Intent i = new Intent(MapsActivity.this,DetailActivity.class);
+                    i.putExtra("nombre",obj.getProducts().get(posiSubOfert).getName());
+                    i.putExtra("url",obj.getProducts().get(posiSubOfert).getImages().get(0));
+                    i.putExtra("detalle",obj.getProducts().get(posiSubOfert).getDescription());
+                    i.putExtra("bixiPoints",obj.getProducts().get(posiSubOfert).getPoints());
+                    i.putExtra("product_id",obj.getProducts().get(posiSubOfert).getProductId());
+                    i.putExtra(Constants.extraToken,token);
+                        startActivity(i);
 
 
                 }
@@ -223,20 +297,117 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             imgGoRigh.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(resultProductsJsons.get(position).getOferDisplay()< resultProductsJsons.get(position).getMaxquantityOffers() - 1)
+                    {
+                        int currentPosition = resultProductsJsons.get(position).getOferDisplay();
+                        currentPosition ++;
+                        pb.setVisibility(View.VISIBLE);
+                        txtDescripcion.setText(resultProductsJsons.get(position).getProducts().get(currentPosition).getName());
+                        paintImage(resultProductsJsons.get(position).getProducts().get(currentPosition).getImages().get(0),image,pb);
+                        resultProductsJsons.get(position).setOferDisplay(currentPosition);
+                        tvBixiPoints.setText(resultProductsJsons.get(position).getProducts().get(currentPosition).getPoints()+"B");
 
+                        if(resultProductsJsons.get(position).getOferDisplay() == resultProductsJsons.get(position).getMaxquantityOffers() - 1)
+                        {
+                            updateArrows(imgGoRigh,false);
+                            updateArrows(imgGoLeft,true);
+                        }else
+                        {
+                            updateArrows(imgGoRigh,true);
+                            updateArrows(imgGoLeft,true);
+                        }
+                    }
                 }
             });
 
             imgGoLeft.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int currentPosition = resultProductsJsons.get(position).getOferDisplay();
+                    currentPosition --;
+                    pb.setVisibility(View.VISIBLE);
+                    txtDescripcion.setText(resultProductsJsons.get(position).getProducts().get(currentPosition).getName());
+                    paintImage(resultProductsJsons.get(position).getProducts().get(currentPosition).getImages().get(0),image,pb);
+                    resultProductsJsons.get(position).setOferDisplay(currentPosition);
+                    tvBixiPoints.setText(resultProductsJsons.get(position).getProducts().get(currentPosition).getPoints()+"B");
+
+                    if(resultProductsJsons.get(position).getOferDisplay() == 0)
+                    {
+                        updateArrows(imgGoRigh,true);
+                        updateArrows(imgGoLeft,false);
+                    }else
+                    {
+                        updateArrows(imgGoRigh,true);
+                        updateArrows(imgGoLeft,true);
+                    }
+                }
+
+            });
+
+            imgLiketIt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(token != null && !token.equals(""))
+                    {
+                        ResultProductsJson obj = resultProductsJsons.get(position);
+                        int posiSubOfert = obj.getOferDisplay();
+                        presenter.likeProductsFromServer(token,obj.getProducts().get(posiSubOfert).getProductId(),position);
+                    }else
+                    {
+                        alertaToken();
+                    }
 
                 }
             });
 
+            ApplyCustomFont.applyFont(this,d.findViewById(R.id.home_recycler_id_dif),"fonts/Corbel.ttf");
+
             d.show();
         }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(d != null)
+        {
+            if(d.isShowing())
+            {
+                d.dismiss();
+            }
+        }
+    }
+
+    private void updateArrows(ImageView img, boolean show)
+    {
+        if(show)
+            img.setVisibility(View.VISIBLE);
+        else
+            img.setVisibility(View.INVISIBLE);
+    }
+
+    private void paintImage(String url, ImageView image, final ProgressBar pbar)
+    {
+        if(url != null && !url.equals(""))
+        {
+            Picasso.with(getApplicationContext())
+                    .load(url)
+                    .fit()
+                    .placeholder(R.color.colorAccent)
+                    .error(R.color.colorAccent)
+                    .into(image, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            pbar.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onError() {
+                            pbar.setVisibility(View.INVISIBLE);
+                        }
+                    });
+        }
     }
 
     @Override
@@ -285,6 +456,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
 
+            resultProductsJsons.get(i).setMaxquantityOffers(resultProductsJsons.get(i).getProducts().size());
         }
     }
 
@@ -419,5 +591,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // other 'case' lines to check for other
             // permissions this app might request
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == SEARCH_REQUEST)
+        {
+            if(resultCode == Activity.RESULT_OK)
+            {
+                presenter.cargarProductsFromServer(
+                        data.getStringExtra("search"),
+                        data.getStringExtra("ubicacionId"),
+                        data.getStringExtra("ordenar"),
+                        data.getStringExtra("isOffer"),
+                        data.getIntExtra("pointFrom",10),
+                        data.getIntExtra("pointTo",300));
+            }
+        }
+    }
+
+    private void alertaToken()
+    {
+
+        final android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(MapsActivity.this,R.style.DialogAlertTheme).create();
+        alertDialog.setTitle("Alerta");
+        alertDialog.setMessage("Debe iniciar sesión o registrarse.");
+        alertDialog.setButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE, "Aceptar",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent newIntent = new Intent(MapsActivity.this,Login.class);
+                        startActivity(newIntent);
+                    }
+                });
+        alertDialog.setButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE, "Cancelar",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        alertDialog.dismiss();
+                    }
+                });
+        alertDialog.show();
     }
 }

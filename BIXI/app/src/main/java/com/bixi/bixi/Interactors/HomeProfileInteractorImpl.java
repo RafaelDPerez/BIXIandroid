@@ -14,8 +14,8 @@ import retrofit2.Response;
  */
 
 public class HomeProfileInteractorImpl implements HomeProfileInteractor {
-    UserService service;
 
+    UserService service;
     public HomeProfileInteractorImpl(UserService service)
     {
         this.service = service;

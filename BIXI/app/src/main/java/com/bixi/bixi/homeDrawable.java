@@ -3,12 +3,15 @@ package com.bixi.bixi;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.DialogPreference;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,6 +36,7 @@ import com.bixi.bixi.Views.HomeLikeIt;
 import com.bixi.bixi.Views.HomeProfileFragment;
 import com.bixi.bixi.Views.SearchActivity;
 import com.bixi.bixi.Views.TransaccionesFragment;
+import com.google.android.gms.maps.MapView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
@@ -47,12 +51,18 @@ public class homeDrawable extends AppCompatActivity
     private HomeFragment homeFragment;
     private HomeProfileFragment homeProfileFragment;
     public static Fragment actual_Fragment = null;
+    private String token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_drawable);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
+        SharedPreferences prefs =
+                getSharedPreferences(Constants.appPreferences, Context.MODE_PRIVATE);
+       token = prefs.getString("token", "");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -70,7 +80,6 @@ public class homeDrawable extends AppCompatActivity
                         .build());
         initializeRV();
         navigationView.setNavigationItemSelectedListener(this);
-
     }
 
     @Override
@@ -121,7 +130,7 @@ public class homeDrawable extends AppCompatActivity
         menu.add(pojo3);
         SimpleMenuPojo pojo4 = new SimpleMenuPojo("Ofertas cerca de mi","3");
         menu.add(pojo4);
-        SimpleMenuPojo pojo5 = new SimpleMenuPojo("Transacciónes","4");
+        SimpleMenuPojo pojo5 = new SimpleMenuPojo("Transacciones","4");
         menu.add(pojo5);
         SimpleMenuPojo pojo6 = new SimpleMenuPojo("Salir","5");
         menu.add(pojo6);
@@ -147,22 +156,7 @@ public class homeDrawable extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.mybutton) {
-            // do something here
-            Intent i = new Intent(this,SearchActivity.class);
-            startActivity(i);
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -182,19 +176,46 @@ public class homeDrawable extends AppCompatActivity
 
         if(position == 0)
             getFragmentHome();
-        else if(position == 1)
-            getFragmenProfile();
+        else if(position == 1) {
+
+            if(isTokenValid())
+                getFragmenProfile();
+            else
+                alertaToken();
+        }
         else if(position == 2)
-            getFragmentHomeLikeIt();
+        {
+            if(isTokenValid())
+                getFragmentHomeLikeIt();
+            else
+                alertaToken();
+        }
         else if(position == 3)
             launchMapsActivity();
-        else if(position == 4)
-            launchHistorical();
+        else if(position == 4) {
+
+            if(isTokenValid())
+                launchHistorical();
+            else
+                alertaToken();
+        }
         else if(position == 5)
             logout();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    private boolean isTokenValid()
+    {
+        SharedPreferences prefs =
+                getSharedPreferences(Constants.appPreferences, Context.MODE_PRIVATE);
+        String token = prefs.getString("token", "");
+
+        if(token != null && !token.equals(""))
+            return true;
+        else
+            return false;
     }
 
     private void launchHistorical() {
@@ -216,7 +237,11 @@ public class homeDrawable extends AppCompatActivity
 
     private void launchMapsActivity()
     {
+        SharedPreferences prefs =
+                getSharedPreferences(Constants.appPreferences, Context.MODE_PRIVATE);
+        String token = prefs.getString("token", "");
         Intent myIntent = new Intent(this, MapsActivity.class);
+        myIntent.putExtra(Constants.extraToken,token);
         startActivity(myIntent);
     }
 
@@ -287,5 +312,27 @@ public class homeDrawable extends AppCompatActivity
             ft.commit();
         }
 
+    }
+
+    private void alertaToken()
+    {
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(homeDrawable.this,R.style.DialogAlertTheme).create();
+        alertDialog.setTitle("Alerta");
+        alertDialog.setMessage("Debe iniciar sesión o registrarse.");
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Aceptar",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent newIntent = new Intent(homeDrawable.this,Login.class);
+                        startActivity(newIntent);
+                    }
+                });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancelar",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    alertDialog.dismiss();
+                    }
+                });
+        alertDialog.show();
     }
 }

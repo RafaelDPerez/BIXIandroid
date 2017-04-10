@@ -5,6 +5,7 @@ import android.Manifest;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -34,8 +35,12 @@ import com.bixi.bixi.Pojos.UserLogin;
 import com.bixi.bixi.Presenter.HomeProfilePresenterImpl;
 import com.bixi.bixi.R;
 import com.bixi.bixi.Utility.Constants;
+import com.bixi.bixi.bixi.basics.ApplyCustomFont;
 import com.bixi.bixi.homeDrawable;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.frosquivel.magicalcamera.MagicalCamera;
 import com.frosquivel.magicalcamera.MagicalPermissions;
 import com.frosquivel.magicalcamera.Utilities.ConvertSimpleImage;
@@ -77,7 +82,10 @@ public class HomeProfileFragment extends Fragment implements HomeProfileView, Ge
     @BindView(R.id.progressBar4)
     ProgressBar pb;
 
- @BindView(R.id.constNew)
+    @BindView(R.id.progressBarProfile)
+    ProgressBar pbProfile;
+
+    @BindView(R.id.constNew)
     ConstraintLayout constraintLayout;
 
     private static HomeProfileFragment instance;
@@ -132,11 +140,13 @@ public class HomeProfileFragment extends Fragment implements HomeProfileView, Ge
     private void loadView(LayoutInflater inflater, ViewGroup container) {
         // TODO Auto-generated method stub
         view = inflater.inflate(R.layout.user_profile_layout, container, false);
-
+        ApplyCustomFont.applyFont(getInstance().getActivity(),view.findViewById(R.id.profile_id),"fonts/Corbel.ttf");
     }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        pb.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.purpleBixi2), PorterDuff.Mode.MULTIPLY);
+        pbProfile.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.purpleBixi2), PorterDuff.Mode.MULTIPLY);
         imageButtonCamera = (ImageButton) view.findViewById(R.id.imageButtonCamera_profile);
         btnResetPassword = (Button) view.findViewById(R.id.btnResetPassword);
         magicalPermissions = new MagicalPermissions(this, permissions);
@@ -148,6 +158,7 @@ public class HomeProfileFragment extends Fragment implements HomeProfileView, Ge
             presenter = new HomeProfilePresenterImpl(this);
             presenter.getUserInformation(token);
         }
+
     }
 
     @Override
@@ -251,9 +262,24 @@ public class HomeProfileFragment extends Fragment implements HomeProfileView, Ge
                 tvProfileTelefono.setText(information.getPhone1());
             if(information.getBirth_date() != null)
                 tvProfileFechaNacimiento.setText(information.getBirth_date());
-            if(information.getImage() != null)
-                Glide.with(this).load(information.getImage()).dontAnimate().centerCrop().placeholder(R.color.purpleBixi).into(imgProfileImage);
+            if(information.getImage() != null) {
+                pbProfile.setVisibility(View.VISIBLE);
+                Glide.with(getInstance().getActivity()).load(information.getImage()).dontAnimate().centerCrop().placeholder(R.color.colorAccent)
+                        .listener(new RequestListener<String, GlideDrawable>() {
+                            @Override
+                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                pbProfile.setVisibility(View.INVISIBLE);
+                                return false;
+                            }
 
+                            @Override
+                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                pbProfile.setVisibility(View.INVISIBLE);
+                                return false;
+                            }
+                        })
+                        .into(imgProfileImage);
+            }
         }
     }
 

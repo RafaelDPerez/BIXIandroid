@@ -13,6 +13,7 @@ import com.bixi.bixi.Interfaces.RecyclerViewClickListener;
 import com.bixi.bixi.Pojos.Oferta;
 import com.bixi.bixi.Pojos.SimpleMenuPojo;
 import com.bixi.bixi.R;
+import com.bixi.bixi.bixi.basics.ApplyCustomFont;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class RVAdapterMenu extends RecyclerView.Adapter<RVAdapterMenu.MenuViewHo
     public MenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_layout,parent,false);
         MenuViewHolder menuViewHolder = new MenuViewHolder(v);
+        ApplyCustomFont.applyFont(context,v.findViewById(R.id.menu_layout_id),"fonts/Corbel.ttf");
         return menuViewHolder;
     }
 

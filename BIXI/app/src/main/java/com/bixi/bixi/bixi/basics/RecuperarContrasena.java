@@ -35,6 +35,7 @@ public class RecuperarContrasena extends AppCompatActivity {
     {
         ButterKnife.bind(this);
         makeNoLimits();
+        ApplyCustomFont.applyFont(this,findViewById(R.id.content_recuperar_contrasena),"fonts/Corbel.ttf");
     }
 
 

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bixi.bixi.Interfaces.RecyclerViewClickListenerHome;
 import com.bixi.bixi.Pojos.ResultHistoricalPojo;
 import com.bixi.bixi.R;
+import com.bixi.bixi.bixi.basics.ApplyCustomFont;
 import com.google.android.gms.vision.text.Text;
 
 import java.util.List;
@@ -40,6 +41,7 @@ public class RVAdapterTransacciones extends  RecyclerView.Adapter<RVAdapterTrans
     public TransaccionesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.transacciones_rv_layout,parent,false);
         TransaccionesViewHolder tvh = new TransaccionesViewHolder(v);
+        ApplyCustomFont.applyFont(context,v.findViewById(R.id.transacciones_id),"fonts/Corbel.ttf");
         return tvh;
     }
 
