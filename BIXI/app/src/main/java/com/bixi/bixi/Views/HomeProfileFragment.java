@@ -3,6 +3,8 @@ package com.bixi.bixi.Views;
 
 import android.Manifest;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
@@ -50,6 +52,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -281,6 +284,17 @@ public class HomeProfileFragment extends Fragment implements HomeProfileView, Ge
                         .into(imgProfileImage);
             }
         }
+    }
+
+    @OnClick(R.id.btnVerOfertas)
+    void verOfertas()
+    {
+        HomeFragment homeFragment = HomeFragment.getInstance();
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        FragmentTransaction fragmentTransaction =        fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.details, homeFragment);
+        fragmentTransaction.commit();
     }
 
     @Override

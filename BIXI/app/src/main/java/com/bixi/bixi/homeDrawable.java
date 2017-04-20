@@ -30,6 +30,7 @@ import com.bixi.bixi.Adaptadores.RVAdapterMenu;
 import com.bixi.bixi.Interfaces.RecyclerViewClickListener;
 import com.bixi.bixi.Pojos.SimpleMenuPojo;
 import com.bixi.bixi.Utility.Constants;
+import com.bixi.bixi.Views.AddPointsFragment;
 import com.bixi.bixi.Views.HomeActivity;
 import com.bixi.bixi.Views.HomeFragment;
 import com.bixi.bixi.Views.HomeLikeIt;
@@ -115,7 +116,13 @@ public class homeDrawable extends AppCompatActivity
         rv.setLayoutManager(llm);
         menu = createMenuObj();
 
-        RVAdapterMenu adapterMenu = new RVAdapterMenu(menu,this,this);
+        boolean haveToken = false;
+        if(token != null && !token.equals(""))
+            haveToken = true;
+        else
+            haveToken = false;
+
+        RVAdapterMenu adapterMenu = new RVAdapterMenu(menu,this,this,haveToken);
         rv.setAdapter(adapterMenu);
     }
 
@@ -126,14 +133,24 @@ public class homeDrawable extends AppCompatActivity
         menu.add(pojo1);
         SimpleMenuPojo pojo2 = new SimpleMenuPojo("Mi Perfil","1");
         menu.add(pojo2);
-        SimpleMenuPojo pojo3 = new SimpleMenuPojo("Ofertas que me gustan","2");
+        SimpleMenuPojo pojo3 = new SimpleMenuPojo("Agregar Puntos","2");
         menu.add(pojo3);
-        SimpleMenuPojo pojo4 = new SimpleMenuPojo("Ofertas cerca de mi","3");
+        SimpleMenuPojo pojo4 = new SimpleMenuPojo("Ofertas que me gustan","3");
         menu.add(pojo4);
-        SimpleMenuPojo pojo5 = new SimpleMenuPojo("Transacciones","4");
+        SimpleMenuPojo pojo5 = new SimpleMenuPojo("Ofertas cerca de mi","4");
         menu.add(pojo5);
-        SimpleMenuPojo pojo6 = new SimpleMenuPojo("Salir","5");
+        SimpleMenuPojo pojo6 = new SimpleMenuPojo("Transacciones","5");
         menu.add(pojo6);
+        if(token != null && !token.equals(""))
+        {
+            SimpleMenuPojo pojo7 = new SimpleMenuPojo("Salir","6");
+            menu.add(pojo7);
+        }else
+        {
+            SimpleMenuPojo pojo7 = new SimpleMenuPojo("Iniciar sesión","6");
+            menu.add(pojo7);
+        }
+
         return menu;
     }
 
@@ -182,29 +199,37 @@ public class homeDrawable extends AppCompatActivity
                 getFragmenProfile();
             else
                 alertaToken();
+        } else if(position == 2)
+        {
+            if(isTokenValid())
+                getFragmentAddPoints();
+            else
+                alertaToken();
         }
-        else if(position == 2)
+        else if(position == 3)
         {
             if(isTokenValid())
                 getFragmentHomeLikeIt();
             else
                 alertaToken();
         }
-        else if(position == 3)
+        else if(position == 4)
             launchMapsActivity();
-        else if(position == 4) {
+        else if(position == 5) {
 
             if(isTokenValid())
                 launchHistorical();
             else
                 alertaToken();
         }
-        else if(position == 5)
+        else if(position == 6)
             logout();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
     }
+
+
 
     private boolean isTokenValid()
     {
@@ -223,6 +248,24 @@ public class homeDrawable extends AppCompatActivity
         {
             FragmentTransaction ft;
             TransaccionesFragment fg = TransaccionesFragment.getInstance();
+            fg.setRetainInstance(false);
+
+            ft = getFragmentManager().beginTransaction();
+            if(actual_Fragment != null)
+                ft.remove(actual_Fragment);
+            actual_Fragment = fg;
+            ft.replace(R.id.details,fg);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.commit();
+        }
+    }
+
+    private void getFragmentAddPoints() {
+
+        if(!(actual_Fragment instanceof AddPointsFragment))
+        {
+            FragmentTransaction ft;
+            AddPointsFragment fg = AddPointsFragment.getInstance();
             fg.setRetainInstance(false);
 
             ft = getFragmentManager().beginTransaction();
@@ -276,7 +319,7 @@ public class homeDrawable extends AppCompatActivity
         }
     }
 
-    private void getFragmentHome()
+    public void getFragmentHome()
     {
         if(!(actual_Fragment instanceof HomeFragment))
         {

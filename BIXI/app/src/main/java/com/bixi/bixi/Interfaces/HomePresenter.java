@@ -14,6 +14,7 @@ public interface HomePresenter {
     void cargarProductosFavoritosFromServer(String token);
     void likeProductsFromServer(String token, String id, int position);
     void dislikeProductsFromServer(String token, String id, int position);
+    void detachView();
 
 
 }

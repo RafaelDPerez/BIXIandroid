@@ -288,6 +288,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     i.putExtra("bixiPoints",obj.getProducts().get(posiSubOfert).getPoints());
                     i.putExtra("product_id",obj.getProducts().get(posiSubOfert).getProductId());
                     i.putExtra(Constants.extraToken,token);
+                    String[] selItemArray = new String[obj.getProducts().get(posiSubOfert).getImages().size()];
+                    for(int x = 0;x<obj.getProducts().get(posiSubOfert).getImages().size();x++)
+                    {
+                        selItemArray[x] = obj.getProducts().get(posiSubOfert).getImages().get(x);
+                    }
+                    i.putExtra("arrayImages",selItemArray);
                         startActivity(i);
 
 

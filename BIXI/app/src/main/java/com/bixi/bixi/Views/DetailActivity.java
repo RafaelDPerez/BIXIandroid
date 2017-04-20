@@ -66,6 +66,10 @@ public class DetailActivity extends AppCompatActivity implements HomeView {
     HomePresenter presenter;
     private int position;
 
+    private int positionImages = 0;
+    private String[] selItemArray;
+    private int cantidadMaximaImagenes = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,11 +87,10 @@ public class DetailActivity extends AppCompatActivity implements HomeView {
         pb.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.purpleBixi2), PorterDuff.Mode.MULTIPLY);
         pb.setVisibility(View.VISIBLE);
       //  makeNoLimits();
+        imgGoLeft.setVisibility(View.INVISIBLE);
         Bundle extras = getIntent().getExtras();
         presenter = new HomePresenterImpl(this);
         tvBixiPoints.setVisibility(View.VISIBLE);
-        imgGoLeft.setVisibility(View.INVISIBLE);
-        imgGoRight.setVisibility(View.INVISIBLE);
         if(extras != null)
         {
             titulo.setText(extras.getString("nombre"));
@@ -97,9 +100,80 @@ public class DetailActivity extends AppCompatActivity implements HomeView {
             productId = extras.getString("product_id");
             token = extras.getString(Constants.extraToken);
             position = extras.getInt("offerDisplay",0);
+            selItemArray = extras.getStringArray("arrayImages");
+            cantidadMaximaImagenes = selItemArray.length;
         }
 
+        if(cantidadMaximaImagenes == 0)
+            imgGoRight.setVisibility(View.INVISIBLE);
+
+        if(cantidadMaximaImagenes >0)
+            btnOnClicks();
+        else {
+            imgGoRight.setVisibility(View.INVISIBLE);
+            imgGoLeft.setVisibility(View.INVISIBLE);
+        }
         ApplyCustomFont.applyFont(this,findViewById(R.id.detail_detail_root),"fonts/Corbel.ttf");
+    }
+
+    private void btnOnClicks()
+    {
+        imgGoRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(positionImages < (cantidadMaximaImagenes - 1)) {
+                    positionImages ++;
+
+                    setImagen(selItemArray[positionImages]);
+
+                    if (positionImages == (cantidadMaximaImagenes - 1)) {
+                        updateArrows(imgGoRight, false);
+                        updateArrows(imgGoLeft, true);
+                    } else {
+                        updateArrows(imgGoRight, true);
+                        updateArrows(imgGoLeft, true);
+                    }
+
+
+                }
+
+            }
+        });
+
+        imgGoLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(positionImages > 0) {
+
+                    positionImages --;
+
+                    setImagen(selItemArray[positionImages]);
+
+                        if(positionImages == 0)
+                        {
+                            updateArrows(imgGoRight,true);
+                            updateArrows(imgGoLeft,false);
+                        }else
+                        {
+                            updateArrows(imgGoRight,true);
+                            updateArrows(imgGoLeft,true);
+                        }
+
+
+                }
+
+            }
+        });
+    }
+
+    private void updateArrows(ImageView img, boolean show)
+    {
+        if(show)
+            img.setVisibility(View.VISIBLE);
+        else
+            img.setVisibility(View.INVISIBLE);
     }
 
 

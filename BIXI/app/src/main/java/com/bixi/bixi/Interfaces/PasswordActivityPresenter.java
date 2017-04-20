@@ -9,4 +9,5 @@ import com.bixi.bixi.Pojos.OffersPointsClaim;
 public interface PasswordActivityPresenter {
     void reclaimOffer(String token, OffersPointsClaim obj);
     void addPointsOffer(String token, OffersPointsClaim onj);
+    void destroyReference();
 }

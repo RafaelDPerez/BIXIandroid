@@ -31,18 +31,31 @@ public class PasswordActivityPresenterImpl implements PasswordActivityPresenter,
 
     @Override
     public void addPointsOffer(String token, OffersPointsClaim onj) {
+        interactor.addPointOffersToServer(token,onj,this);
+    }
 
+    @Override
+    public void destroyReference() {
+        view = null;
     }
 
     @Override
     public void success(String msg) {
-        view.hideProgress();
-        view.exito(msg);
+        if(view != null)
+        {
+            view.hideProgress();
+            view.exito(msg);
+        }
+
     }
 
     @Override
     public void error(String msg) {
-        view.hideProgress();
-        view.error(msg);
+        if(view != null)
+        {
+            view.hideProgress();
+            view.error(msg);
+        }
+
     }
 }

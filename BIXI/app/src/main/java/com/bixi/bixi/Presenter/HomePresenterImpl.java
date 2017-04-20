@@ -117,6 +117,12 @@ public class HomePresenterImpl implements HomePresenter, OnHomeOfertasFinishList
         iteractor.dislikeOffer(token,obj,this,position);
     }
 
+    @Override
+    public void detachView() {
+        if(view != null)
+            view = null;
+    }
+
 
     @Override
     public void ofertasCargadas(List<Oferta> ofertas) {
