@@ -9,6 +9,7 @@ public class OffersPointsClaim {
     private String pin;
     private String product_id;
     private String description;
+    private int points;
 
     public OffersPointsClaim() {
     }
@@ -35,5 +36,13 @@ public class OffersPointsClaim {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 }

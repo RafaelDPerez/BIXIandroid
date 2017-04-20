@@ -25,6 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.bixi.bixi.R.id.end_padder;
 import static com.bixi.bixi.R.id.textView;
 
 public class PasswordActivity extends AppCompatActivity implements GeneralInterface {
@@ -38,6 +39,9 @@ public class PasswordActivity extends AppCompatActivity implements GeneralInterf
     private PasswordActivityPresenter presenter;
     private String productId;
     private String token;
+    private boolean addPoints = false;
+    private String points;
+    private String addPointsDescripcion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,12 @@ public class PasswordActivity extends AppCompatActivity implements GeneralInterf
         {
             productId = extras.getString("product_id");
             token = extras.getString(Constants.extraToken);
+            addPoints = extras.getBoolean("addPoints",false);
+            if(addPoints)
+            {
+                points = extras.getString("points");
+                addPointsDescripcion = extras.getString("addPointsDescripcion");
+            }
         }
         inicializaciones();
         setUpTextWatcher();
@@ -86,10 +96,19 @@ public class PasswordActivity extends AppCompatActivity implements GeneralInterf
 
         public void afterTextChanged(Editable s) {
             if (s.length() == 6) {
-                OffersPointsClaim obj = new OffersPointsClaim();
-                obj.setPin(s.toString().trim());
-                obj.setProduct_id(productId);
-                presenter.reclaimOffer(token,obj);
+                if(!addPoints) {
+                    OffersPointsClaim obj = new OffersPointsClaim();
+                    obj.setPin(s.toString().trim());
+                    obj.setProduct_id(productId);
+                    presenter.reclaimOffer(token, obj);
+                }else
+                {
+                    OffersPointsClaim obj = new OffersPointsClaim();
+                    obj.setDescription(addPointsDescripcion);
+                    obj.setPin(s.toString().trim());
+                    obj.setPoints(Integer.parseInt(points));
+                    presenter.addPointsOffer(token,obj);
+                }
             }
         }
     };
@@ -212,6 +231,18 @@ public class PasswordActivity extends AppCompatActivity implements GeneralInterf
             }
         });
         builder.show();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.destroyReference();
+        presenter = null;
+        productId = null;
+        token = null;
+        password = null;
+        pb = null;
     }
 
     @Override

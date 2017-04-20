@@ -211,6 +211,12 @@ public class HomeLikeIt extends Fragment implements HomeView,RecyclerViewClickLi
         i.putExtra("url",url);
         i.putExtra("detalle",obj.getDescription());
         i.putExtra("bixiPoints",obj.getPoints());
+        String[] selItemArray = new String[obj.getImages().size()];
+        for(int x = 0;x<obj.getImages().size();x++)
+        {
+            selItemArray[x] = obj.getImages().get(x);
+        }
+        i.putExtra("arrayImages",selItemArray);
         i.putExtra(Constants.extraToken,token);
 
 /*

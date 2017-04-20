@@ -32,13 +32,15 @@ public class RVAdapterMenu extends RecyclerView.Adapter<RVAdapterMenu.MenuViewHo
     Context context;
     LayoutInflater inflater;
     private static RecyclerViewClickListener itemListener;
+    private boolean haveToken;
 
-    public RVAdapterMenu(ArrayList<SimpleMenuPojo> menu, Activity context, RecyclerViewClickListener itemListener)
+    public RVAdapterMenu(ArrayList<SimpleMenuPojo> menu, Activity context, RecyclerViewClickListener itemListener,boolean haveToken)
     {
         this.menu = menu;
         this.context = context;
         this.itemListener = itemListener;
         this.inflater = LayoutInflater.from(context);
+        this.haveToken = haveToken;
     }
 
     @Override
@@ -64,13 +66,19 @@ public class RVAdapterMenu extends RecyclerView.Adapter<RVAdapterMenu.MenuViewHo
                 else if(menuPojo.getLabelIcon().equals("1"))
                     holder.labelIcon.setImageResource(R.drawable.account);
                 else if(menuPojo.getLabelIcon().equals("2"))
-                    holder.labelIcon.setImageResource(R.drawable.heart_outline_white);
+                    holder.labelIcon.setImageResource(R.drawable.addpoints);
                 else if(menuPojo.getLabelIcon().equals("3"))
-                    holder.labelIcon.setImageResource(R.drawable.google_maps);
+                    holder.labelIcon.setImageResource(R.drawable.heart_outline_white);
                 else if(menuPojo.getLabelIcon().equals("4"))
-                    holder.labelIcon.setImageResource(R.drawable.table_edit);
+                    holder.labelIcon.setImageResource(R.drawable.google_maps);
                 else if(menuPojo.getLabelIcon().equals("5"))
-                    holder.labelIcon.setImageResource(R.drawable.exit_to_app);
+                    holder.labelIcon.setImageResource(R.drawable.table_edit);
+                else if(menuPojo.getLabelIcon().equals("6")) {
+                    if(haveToken)
+                        holder.labelIcon.setImageResource(R.drawable.exit_to_app);
+                    else
+                        holder.labelIcon.setImageResource(R.drawable.iniciarsesion);
+                }
                 else
                 {
 

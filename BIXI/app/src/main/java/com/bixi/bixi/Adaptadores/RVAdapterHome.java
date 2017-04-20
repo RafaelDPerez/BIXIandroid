@@ -53,6 +53,7 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
     public RVAdapterHome.OfertaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_recycler_layout, parent, false);
         OfertaViewHolder ovh = new OfertaViewHolder(v);
+
         ApplyCustomFont.applyFont(context,v.findViewById(R.id.home_recycler_id),"fonts/Corbel.ttf");
 
         return ovh;

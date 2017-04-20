@@ -73,7 +73,6 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
 
-    private List<Oferta> oferta;
     private ProductsJson productsJson;
     boolean click = false;
     private FloatingActionButton fabMapa;
@@ -88,8 +87,9 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
 
     public static HomeFragment getInstance()
     {
-        if(instance == null)
+        if(instance == null) {
             instance = new HomeFragment();
+        }
 
         return instance;
     }
@@ -254,8 +254,13 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
 
         }
         result = this.productsJson.getResult();
-        RVAdapterHome adapter = new RVAdapterHome(result,getInstance().getActivity(),this);
+
+        Activity contex = getInstance().getActivity();
+        if(contex == null)
+            contex = getInstance().getActivity();
+        RVAdapterHome adapter = new RVAdapterHome(result,contex,this);
         rv.setAdapter(adapter);
+
 
         if(swipeRefreshLayout.isRefreshing())
             swipeRefreshLayout.setRefreshing(false);
@@ -283,6 +288,13 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
         i.putExtra("bixiPoints",obj.getProducts().get(posiSubOfert).getPoints());
         i.putExtra("product_id",obj.getProducts().get(posiSubOfert).getProductId());
         i.putExtra("offerDisplay",posiSubOfert);
+
+        String[] selItemArray = new String[obj.getProducts().get(posiSubOfert).getImages().size()];
+        for(int x = 0;x<obj.getProducts().get(posiSubOfert).getImages().size();x++)
+        {
+            selItemArray[x] = obj.getProducts().get(posiSubOfert).getImages().get(x);
+        }
+        i.putExtra("arrayImages",selItemArray);
         i.putExtra(Constants.extraToken,token);
 
         /*
@@ -363,5 +375,12 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
                     }
                 });
         alertDialog.show();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        presenter.detachView();
+        presenter = null;
     }
 }
