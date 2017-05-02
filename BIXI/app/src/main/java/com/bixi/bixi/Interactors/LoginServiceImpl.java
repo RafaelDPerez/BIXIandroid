@@ -62,4 +62,37 @@ public class LoginServiceImpl implements LoginService {
         });
     }
 
+    @Override
+    public void validarUser_LoginSocial(UserSimple obj,final OnLoginFinishListener listener) {
+        service.postAttempLogin_Social(obj).enqueue(new Callback<UserLogin>() {
+            @Override
+            public void onResponse(Call<UserLogin> call, Response<UserLogin> response) {
+                if(response.isSuccessful())
+                {
+                    if(response.body().getSceResponseMsg().equals("OK"))
+                    {
+                        listener.exitoOperacion(response.body().getResult().getToken());
+
+                    }else
+                    {
+                        listener.apiError_Social(response.body().getSceResponseMsg());
+                    }
+
+                }else
+                {
+                    if(response != null && response.errorBody() != null)
+                        listener.apiError_Social(response.errorBody().toString());
+                    else
+                        listener.apiError_Social("");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserLogin> call, Throwable t) {
+                listener.apiError(t.getMessage());
+            }
+        });
+
+    }
+
 }

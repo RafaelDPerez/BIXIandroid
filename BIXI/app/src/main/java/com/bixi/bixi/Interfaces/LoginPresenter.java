@@ -6,4 +6,5 @@ package com.bixi.bixi.Interfaces;
 
 public interface LoginPresenter {
     void validarUsuario(String user, String password);
+    void validarUsuario_LoginSocial(String email);
 }

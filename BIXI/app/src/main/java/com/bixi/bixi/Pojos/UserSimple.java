@@ -11,6 +11,12 @@ public class UserSimple implements Serializable {
     private final static long serialVersionUID = 4007865184775523488L;
     private String email;
     private String password;
+    private String encrypted;
+
+    public UserSimple()
+    {
+
+    }
 
     public UserSimple(String email, String password)
     {
@@ -34,4 +40,11 @@ public class UserSimple implements Serializable {
         this.password = password;
     }
 
+    public String getEncrypted() {
+        return encrypted;
+    }
+
+    public void setEncrypted(String encrypted) {
+        this.encrypted = encrypted;
+    }
 }

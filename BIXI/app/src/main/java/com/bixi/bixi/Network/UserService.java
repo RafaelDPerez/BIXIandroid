@@ -37,6 +37,9 @@ public interface UserService {
     @POST("login")
     Call<UserLogin> postAttempLogin(@Body UserSimple user);
 
+    @POST("login_social")
+    Call<UserLogin> postAttempLogin_Social(@Body UserSimple user);
+
     @POST("search_products")
     Call<ProductsJson> postProdcuts(@Body ProductsSearch productsSearch);
 

@@ -4,11 +4,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -16,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bixi.bixi.Interfaces.LoginPresenter;
@@ -31,6 +36,8 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -40,6 +47,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.linkedin.platform.APIHelper;
+import com.linkedin.platform.LISessionManager;
+import com.linkedin.platform.errors.LIApiError;
+import com.linkedin.platform.errors.LIAuthError;
+import com.linkedin.platform.listeners.ApiListener;
+import com.linkedin.platform.listeners.ApiResponse;
+import com.linkedin.platform.listeners.AuthListener;
+import com.linkedin.platform.utils.Scope;
+import com.squareup.picasso.Picasso;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -48,6 +64,10 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 
+import org.json.JSONObject;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import butterknife.BindString;
@@ -55,6 +75,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.fabric.sdk.android.Fabric;
+
+import static android.R.id.progress;
 
 public class Login extends AppCompatActivity implements
         View.OnClickListener,
@@ -86,6 +108,11 @@ public class Login extends AppCompatActivity implements
     private static final int RC_SIGN_IN = 007;
     private LoginPresenter presenter;
     private String token;
+    public static final String PACKAGE = "com.bixi.bixi";
+    private static final String host = "api.linkedin.com";
+    private static final String url = "https://" + host
+            + "/v1/people/~:" +
+            "(email-address,formatted-name,phone-numbers,picture-urls::(original))";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +129,7 @@ public class Login extends AppCompatActivity implements
             Log.e("No existe Token","");
 
         ApplyCustomFont.applyFont(this,findViewById(R.id.activity_main),"fonts/Corbel.ttf");
+//        generateHashkey();
     }
 
 
@@ -171,6 +199,21 @@ public class Login extends AppCompatActivity implements
                 System.out.println("Twitter ID: "+twitterSessionResult.data.getUserId());
                 System.out.println("Twitter Auth Token: "+twitterSessionResult.data.getAuthToken());
                 System.out.println("Twitter UserCreate Name: "+twitterSessionResult.data.getUserName());
+
+                final TwitterSession twitterSession = twitterSessionResult.data;
+                client.requestEmail(twitterSession, new com.twitter.sdk.android.core.Callback<String>() {
+                    @Override
+                    public void success(Result<String> emailResult) {
+                        String email = emailResult.data;
+                        presenter.validarUsuario_LoginSocial(email);
+                        // ...
+                    }
+
+                    @Override
+                    public void failure(TwitterException e) {
+                   //     callback.onTwitterSignInFailed(e);
+                    }
+                });
             }
 
             @Override
@@ -181,6 +224,47 @@ public class Login extends AppCompatActivity implements
         });
     }
 
+    @OnClick(R.id.imageViewLinkedin)
+    void handleLinkdin()
+    {
+        LISessionManager.getInstance(getApplicationContext())
+                .init(this, buildScope(), new AuthListener() {
+                    @Override
+                    public void onAuthSuccess() {
+
+     //                   Toast.makeText(getApplicationContext(), "success" +
+     //                                   LISessionManager.getInstance(getApplicationContext())
+     //                                           .getSession().getAccessToken().toString(),
+     //                           Toast.LENGTH_LONG).show();
+
+                        APIHelper apiHelper = APIHelper.getInstance(getApplicationContext());
+                        apiHelper.getRequest(Login.this, url, new ApiListener() {
+                            @Override
+                            public void onApiSuccess(ApiResponse result) {
+                                try {
+                                    if(result != null)
+                                        presenter.validarUsuario_LoginSocial(result.getResponseDataAsJson().get("emailAddress").toString());
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onApiError(LIApiError error) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onAuthError(LIAuthError error) {
+                        Toast.makeText(getApplicationContext(), "failed "
+                                        + error.toString(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                }, true);
+    }
 
     @OnClick(R.id.imageViewFacebook)
     void handleFbLogin()
@@ -196,6 +280,25 @@ public class Login extends AppCompatActivity implements
                         System.out.println("onSuccess");
                         System.out.println("Facebook ID: "+loginResult.getAccessToken().getUserId());
                         System.out.println("Facebook Auth Token: "+loginResult.getAccessToken().getToken());
+
+                        // App code
+                        GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject json, GraphResponse response) {
+                                // Application code
+                                if (response.getError() != null) {
+                                    System.out.println("ERROR");
+                                } else {
+                                    System.out.println("Success");
+                                    String jsonresult = String.valueOf(json);
+                                    System.out.println("JSON Result" + jsonresult);
+
+                                    String fbUserEmail = json.optString("email");
+                                    presenter.validarUsuario_LoginSocial(fbUserEmail);
+                                }
+                                Log.v("FaceBook Response :", response.toString());
+                            }
+                        });
 
                     }
 
@@ -237,24 +340,35 @@ public class Login extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-     //   callbackManagerFaceBook.onActivityResult(requestCode, resultCode, data);
+        callbackManagerFaceBook.onActivityResult(requestCode, resultCode, data);
         client.onActivityResult(requestCode, resultCode, data);
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
+
+
+        LISessionManager.getInstance(getApplicationContext())
+                .onActivityResult(this,
+                        requestCode, resultCode, data);
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
-      //  Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        Log.d("googleLogin", "handleSignInResult: " + result.isSuccess());
+        Log.d("googleLogin_status", "handleSignInResult_status: " + result.getStatus().toString());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            System.out.println("onSuccess");
-            System.out.println("Google ID: "+acct.getId());
-            System.out.println("Google Auth Token: "+acct.getIdToken());
-            System.out.println("Google UserCreate Name: "+acct.getDisplayName());
+            if(acct != null && acct.getEmail() != null)
+            {
+                System.out.println("onSuccess");
+                System.out.println("Google ID: "+acct.getId());
+                System.out.println("Google Auth Token: "+acct.getIdToken());
+                System.out.println("Google UserCreate Name: "+acct.getDisplayName());
+                presenter.validarUsuario_LoginSocial(acct.getEmail());
+            }
+
           //  updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
@@ -330,6 +444,12 @@ public class Login extends AppCompatActivity implements
         startActivity(i);
     }
 
+    @Override
+    public void navigateToRegister() {
+        Intent intent = new Intent(this, AddUserActivity.class);
+        startActivity(intent);
+    }
+
     public void errorCamposIncorrectos(String mensaje) {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
         builder1.setMessage(mensaje);
@@ -345,4 +465,30 @@ public class Login extends AppCompatActivity implements
         AlertDialog alert11 = builder1.create();
         alert11.show();
     }
+
+    public void generateHashkey(){
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    PACKAGE,
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+
+                System.out.println("Linkin Hasf: "+Base64.encodeToString(md.digest(),
+                        Base64.NO_WRAP));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.d("Name not found", e.getMessage(), e);
+
+        } catch (NoSuchAlgorithmException e) {
+            Log.d("Error", e.getMessage(), e);
+        }
+    }
+
+    private static Scope buildScope() {
+        return Scope.build(Scope.R_BASICPROFILE, Scope.R_EMAILADDRESS);
+    }
+
+
 }
