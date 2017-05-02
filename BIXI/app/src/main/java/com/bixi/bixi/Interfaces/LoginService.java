@@ -17,4 +17,5 @@ import retrofit2.http.Query;
 
 public interface LoginService {
     void validarUser(UserSimple obj, OnLoginFinishListener listener);
+    void validarUser_LoginSocial(UserSimple obj, OnLoginFinishListener listener);
 }

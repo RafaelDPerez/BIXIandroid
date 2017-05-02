@@ -7,4 +7,5 @@ package com.bixi.bixi.Interfaces;
 public interface OnLoginFinishListener {
     void apiError(String error);
     void exitoOperacion(String token);
+    void apiError_Social(String error);
 }

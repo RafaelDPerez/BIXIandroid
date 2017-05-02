@@ -17,4 +17,6 @@ public interface LoginView {
     void setToken(String token);
     void navigateToHome();
 
+    void navigateToRegister();
+
 }

@@ -448,17 +448,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if(resultProductsJsons.get(i).getCommerceLat() != null && !resultProductsJsons.get(i).getCommerceLat().equals("")
                     && resultProductsJsons.get(i).getCommerceLng() != null && !resultProductsJsons.get(i).getCommerceLng().equals(""))
             {
-                int cantidadOfertas = resultProductsJsons.get(i).getProducts().size();
-                double latitud = Double.parseDouble(resultProductsJsons.get(i).getCommerceLat());
-                double longitud = Double.parseDouble(resultProductsJsons.get(i).getCommerceLng());
+                try {
+                    int cantidadOfertas = resultProductsJsons.get(i).getProducts().size();
+                    double latitud = Double.parseDouble(resultProductsJsons.get(i).getCommerceLat());
+                    double longitud = Double.parseDouble(resultProductsJsons.get(i).getCommerceLng());
 
-                MarkerOptions markerOptions = new MarkerOptions()
-                        .icon(BitmapDescriptorFactory.fromBitmap(iconFactory.makeIcon(String.valueOf(cantidadOfertas))))
-                        .position(new LatLng(latitud , longitud))
-                        .snippet(String.valueOf(i))
-                        .anchor(iconFactory.getAnchorU(), iconFactory.getAnchorV());
+                    MarkerOptions markerOptions = new MarkerOptions()
+                            .icon(BitmapDescriptorFactory.fromBitmap(iconFactory.makeIcon(String.valueOf(cantidadOfertas))))
+                            .position(new LatLng(latitud, longitud))
+                            .snippet(String.valueOf(i))
+                            .anchor(iconFactory.getAnchorU(), iconFactory.getAnchorV());
 
-                mMap.addMarker(markerOptions);
+                    mMap.addMarker(markerOptions);
+                }catch (Exception e)
+                {
+                    
+                }
 
             }
 
