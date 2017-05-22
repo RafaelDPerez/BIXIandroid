@@ -40,6 +40,7 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
     LayoutInflater inflater;
     private static RecyclerViewClickListenerHome itemListener;
     private List<String> arrayImgs = new ArrayList<String>();
+    private boolean horizontal = false;
 
     public RVAdapterHome(List<ResultProductsJson> oferta, Activity context, RecyclerViewClickListenerHome itemListener)
     {
@@ -49,9 +50,26 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
         this.inflater = LayoutInflater.from(context);
 
     }
+
+    public RVAdapterHome(List<ResultProductsJson> oferta, Activity context, RecyclerViewClickListenerHome itemListener, boolean horizontal)
+    {
+        this.oferta = oferta;
+        this.context = context;
+        this.itemListener = itemListener;
+        this.inflater = LayoutInflater.from(context);
+        this.horizontal = horizontal;
+
+    }
+
     @Override
     public RVAdapterHome.OfertaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_recycler_layout, parent, false);
+        int resourse = 0;
+        if(!horizontal)
+            resourse = R.layout.home_recycler_layout;
+        else
+            resourse = R.layout.home_recycler_layout_horizontal;
+
+        View v = LayoutInflater.from(parent.getContext()).inflate(resourse, parent, false);
         OfertaViewHolder ovh = new OfertaViewHolder(v);
 
         ApplyCustomFont.applyFont(context,v.findViewById(R.id.home_recycler_id),"fonts/Corbel.ttf");

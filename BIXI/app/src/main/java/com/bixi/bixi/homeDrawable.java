@@ -131,22 +131,24 @@ public class homeDrawable extends AppCompatActivity
         ArrayList<SimpleMenuPojo> menu = new ArrayList<>();
         SimpleMenuPojo pojo1 = new SimpleMenuPojo("Inicio","0");
         menu.add(pojo1);
-        SimpleMenuPojo pojo2 = new SimpleMenuPojo("Mi Perfil","1");
-        menu.add(pojo2);
-        SimpleMenuPojo pojo3 = new SimpleMenuPojo("Agregar Puntos","2");
-        menu.add(pojo3);
-        SimpleMenuPojo pojo4 = new SimpleMenuPojo("Ofertas que me gustan","3");
-        menu.add(pojo4);
-        SimpleMenuPojo pojo5 = new SimpleMenuPojo("Ofertas cerca de mi","4");
-        menu.add(pojo5);
-        SimpleMenuPojo pojo6 = new SimpleMenuPojo("Transacciones","5");
-        menu.add(pojo6);
         if(token != null && !token.equals(""))
         {
+            SimpleMenuPojo pojo2 = new SimpleMenuPojo("Mi Perfil","1");
+            menu.add(pojo2);
+            SimpleMenuPojo pojo3 = new SimpleMenuPojo("Agregar Puntos","2");
+            menu.add(pojo3);
+            SimpleMenuPojo pojo4 = new SimpleMenuPojo("Ofertas que me gustan","3");
+            menu.add(pojo4);
+            SimpleMenuPojo pojo5 = new SimpleMenuPojo("Ofertas cerca de mi","4");
+            menu.add(pojo5);
+            SimpleMenuPojo pojo6 = new SimpleMenuPojo("Transacciones","5");
+            menu.add(pojo6);
             SimpleMenuPojo pojo7 = new SimpleMenuPojo("Salir","6");
             menu.add(pojo7);
         }else
         {
+            SimpleMenuPojo pojo5 = new SimpleMenuPojo("Ofertas cerca de mi","4");
+            menu.add(pojo5);
             SimpleMenuPojo pojo7 = new SimpleMenuPojo("Iniciar sesión","6");
             menu.add(pojo7);
         }
@@ -191,39 +193,51 @@ public class homeDrawable extends AppCompatActivity
     @Override
     public void recyclerViewListClicked(View v, int position) {
 
-        if(position == 0)
-            getFragmentHome();
-        else if(position == 1) {
-
-            if(isTokenValid())
-                getFragmenProfile();
-            else
-                alertaToken();
-        } else if(position == 2)
+        if(token != null && !token.equals(""))
         {
-            if(isTokenValid())
-                getFragmentAddPoints();
-            else
-                alertaToken();
-        }
-        else if(position == 3)
-        {
-            if(isTokenValid())
-                getFragmentHomeLikeIt();
-            else
-                alertaToken();
-        }
-        else if(position == 4)
-            launchMapsActivity();
-        else if(position == 5) {
+            if(position == 0)
+                getFragmentHome();
+            else if(position == 1) {
 
-            if(isTokenValid())
-                launchHistorical();
-            else
-                alertaToken();
+                if(isTokenValid())
+                    getFragmenProfile();
+                else
+                    alertaToken();
+            } else if(position == 2)
+            {
+                if(isTokenValid())
+                    getFragmentAddPoints();
+                else
+                    alertaToken();
+            }
+            else if(position == 3)
+            {
+                if(isTokenValid())
+                    getFragmentHomeLikeIt();
+                else
+                    alertaToken();
+            }
+            else if(position == 4)
+                launchMapsActivity();
+            else if(position == 5) {
+
+                if(isTokenValid())
+                    launchHistorical();
+                else
+                    alertaToken();
+            }
+            else if(position == 6)
+                logout();
+        }else
+        {
+            if(position == 0)
+                getFragmentHome();
+            else if(position == 1)
+                launchMapsActivity();
+            else if(position == 2)
+                logout();
         }
-        else if(position == 6)
-            logout();
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

@@ -35,7 +35,17 @@ public class PasswordActivityInteractorImpl implements PasswordActivityInteracto
                     }else
                         listener.error(response.body().getSceResponseMsg());
                 }else
-                    listener.error(response.body().getSceResponseMsg());
+                {
+                    if(response.body() != null && response.body().getSceResponseMsg() != null)
+                    {
+                        listener.error(response.body().getSceResponseMsg());
+                    }else
+                    {
+                        listener.error("Error");
+                    }
+
+                }
+
             }
 
             @Override
