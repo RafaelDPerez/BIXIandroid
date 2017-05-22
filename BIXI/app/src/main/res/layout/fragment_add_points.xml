@@ -57,4 +57,20 @@
         android:background="@android:color/transparent"
         app:layout_constraintTop_toBottomOf="@+id/edtAddPoints_descripcion"
         app:layout_constraintVertical_bias="0.769" />
+
+    <ProgressBar
+        android:id="@+id/progressBarAddPoint"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/edtAddPoints_descripcion"
+        app:layout_constraintVertical_bias="0.769" />
 </android.support.constraint.ConstraintLayout>

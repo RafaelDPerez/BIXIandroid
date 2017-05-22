@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Build;
@@ -18,6 +19,8 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
@@ -32,8 +35,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bixi.bixi.Adaptadores.RVAdapterHome;
 import com.bixi.bixi.Interfaces.HomePresenter;
 import com.bixi.bixi.Interfaces.HomeView;
+import com.bixi.bixi.Interfaces.RecyclerViewClickListenerHome;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsJson;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsLiketItJson;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ResultProductsJson;
@@ -61,16 +66,21 @@ import com.google.maps.android.ui.BubbleIconFactory;
 import com.google.maps.android.ui.IconGenerator;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+
 import android.Manifest;
 
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,HomeView,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,RecyclerViewClickListenerHome {
 
     private GoogleMap mMap;
     private Marker myMarker;
@@ -86,10 +96,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String token;
     private Dialog d;
 
+    @BindView(R.id.recyclerViewMaps)
+    RecyclerView rv;
+
+    @BindView(R.id.progressBar6)
+    ProgressBar bar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        ButterKnife.bind(this);
         overridePendingTransition(0, 0);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -110,6 +127,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
         presenter = new HomePresenterImpl(this);
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -148,7 +167,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        rv.addItemDecoration(
+                new HorizontalDividerItemDecoration.Builder(this)
+                        .color(Color.GRAY)
+                        .margin(50)
+                        .build());
+
+        rv.setHasFixedSize(true);
+        rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+
+        bar.setVisibility(View.GONE);
+        rv.setVisibility(View.VISIBLE);
+        bar.getIndeterminateDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY);
         presenter.cargarProductsFromServer("");
+
         mMap = googleMap;
 
 
@@ -418,17 +450,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void showProgress() {
-
+        bar.setVisibility(View.VISIBLE);
+        rv.setVisibility(View.GONE);
     }
 
     @Override
     public void hideProgress() {
-
+        bar.setVisibility(View.GONE);
+        rv.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void setError() {
-
+        Toast.makeText(this,"No ha sido posible cargar las ofertas",Toast.LENGTH_SHORT);
     }
 
     @Override
@@ -464,11 +498,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 {
                     
                 }
-
             }
-
             resultProductsJsons.get(i).setMaxquantityOffers(resultProductsJsons.get(i).getProducts().size());
         }
+
+
+
+        RVAdapterHome adapter = new RVAdapterHome(resultProductsJsons,this,this,true);
+        rv.setAdapter(adapter);
     }
 
     @Override
@@ -642,5 +679,50 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 });
         alertDialog.show();
+    }
+
+    @Override
+    public void recyclerViewListClicked(View v, int position, ResultProductsJson resultProductsJson) {
+        ResultProductsJson obj = resultProductsJson;
+        int posiSubOfert = obj.getOferDisplay();
+        Intent i = new Intent(MapsActivity.this,DetailActivity.class);
+        i.putExtra("nombre",obj.getProducts().get(posiSubOfert).getName());
+        i.putExtra("url",obj.getProducts().get(posiSubOfert).getImages().get(0));
+        i.putExtra("detalle",obj.getProducts().get(posiSubOfert).getDescription());
+        i.putExtra("bixiPoints",obj.getProducts().get(posiSubOfert).getPoints());
+        i.putExtra("product_id",obj.getProducts().get(posiSubOfert).getProductId());
+        i.putExtra("offerDisplay",posiSubOfert);
+
+        String[] selItemArray = new String[obj.getProducts().get(posiSubOfert).getImages().size()];
+        for(int x = 0;x<obj.getProducts().get(posiSubOfert).getImages().size();x++)
+        {
+            selItemArray[x] = obj.getProducts().get(posiSubOfert).getImages().get(x);
+        }
+        i.putExtra("arrayImages",selItemArray);
+        i.putExtra(Constants.extraToken,token);
+        startActivity(i);
+    }
+
+    @Override
+    public void recyclerViewClicked(View v, int position) {
+
+    }
+
+    @Override
+    public void recyclerViewRemoveItem(View v, int position) {
+
+    }
+
+    @Override
+    public void recyclerViewLiketItem(View v, int position, ResultProductsJson resultProductsJson) {
+        if(token != null && !token.equals(""))
+        {
+            ResultProductsJson obj = resultProductsJson;
+            int posiSubOfert = obj.getOferDisplay();
+            presenter.likeProductsFromServer(token,obj.getProducts().get(posiSubOfert).getProductId(),position);
+        }else {
+            alertaToken();
+        }
+
     }
 }
