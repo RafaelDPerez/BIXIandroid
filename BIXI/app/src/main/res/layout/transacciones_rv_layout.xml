@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:text="TextView" />
     </LinearLayout>
 
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.65"
             android:textStyle="bold"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:text="TextView" />
 
         <TextView
@@ -58,7 +58,7 @@
             android:layout_weight="0.35"
             android:gravity="end"
             android:textStyle="bold"
-            android:textSize="22sp"
+            android:textSize="14sp"
             android:textColor="@color/tw__composer_red"
             android:text="TextView" />
     </LinearLayout>

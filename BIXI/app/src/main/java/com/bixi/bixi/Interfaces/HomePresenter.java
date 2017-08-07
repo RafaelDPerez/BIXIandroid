@@ -9,8 +9,9 @@ import com.bixi.bixi.Pojos.ProductsSearch;
 
 public interface HomePresenter {
     void cargarOfertas();
-    void cargarProductsFromServer(String search);
-    void cargarProductsFromServer(String search, String ubicacionId,String ordenarPor,String isOffer,int pointFrom, int pointTo);
+    void cargarProductsFromServer(String token, String search);
+    void cargarProductsFromServer(String token, String search, String ubicacionId,String ordenarPor,String isOffer,int pointFrom, int pointTo);
+    void cargarProductsFromServer(String token, String search, String ubicacionId,String ordenarPor,String isOffer,int pointFrom, int pointTo, double latitued, double longitud);
     void cargarProductosFavoritosFromServer(String token);
     void likeProductsFromServer(String token, String id, int position);
     void dislikeProductsFromServer(String token, String id, int position);

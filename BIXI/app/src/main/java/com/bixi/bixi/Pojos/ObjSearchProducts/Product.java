@@ -45,6 +45,9 @@ public class Product implements Serializable
     @SerializedName("status")
     @Expose
     private String status;
+    @SerializedName("is_favorite")
+    @Expose
+    private String is_favorite;
     @SerializedName("images")
     @Expose
     private List<String> images = null;
@@ -69,6 +72,13 @@ public class Product implements Serializable
     public String getDescription() {
         return description;
     }
+
+    public void setIsFavorite(String isFavorite)
+    {
+        this.is_favorite = isFavorite;
+    }
+
+    public boolean getIsFavorite(){return is_favorite.equals("1");}
 
     public void setDescription(String description) {
         this.description = description;

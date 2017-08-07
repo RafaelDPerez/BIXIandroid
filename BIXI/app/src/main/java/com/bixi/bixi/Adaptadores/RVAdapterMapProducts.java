@@ -2,7 +2,6 @@ package com.bixi.bixi.Adaptadores;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -13,11 +12,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.bixi.bixi.Interfaces.RecyclerViewClickListener;
 import com.bixi.bixi.Interfaces.RecyclerViewClickListenerHome;
+import com.bixi.bixi.Pojos.ObjSearchProducts.Product;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ResultProductsJson;
-import com.bixi.bixi.Pojos.Oferta;
-import com.bixi.bixi.Pojos.Result;
+import com.bixi.bixi.Pojos.Products;
 import com.bixi.bixi.R;
 import com.bixi.bixi.bixi.basics.ApplyCustomFont;
 import com.squareup.picasso.Callback;
@@ -30,20 +28,19 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by telynet on 1/5/2017.
+ * Created by Johnny Gil Mejia on 7/9/17.
  */
 
-public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaViewHolder> {
+public class RVAdapterMapProducts extends RecyclerView.Adapter<RVAdapterMapProducts.OfertaViewHolder> {
 
-    List<ResultProductsJson> oferta;
+    List<Product> oferta;
     Context context;
     LayoutInflater inflater;
     private static RecyclerViewClickListenerHome itemListener;
     private List<String> arrayImgs = new ArrayList<String>();
     private boolean horizontal = false;
-    private boolean showLikeButton = false;
 
-    public RVAdapterHome(List<ResultProductsJson> oferta, Activity context, RecyclerViewClickListenerHome itemListener)
+    public RVAdapterMapProducts(List<Product> oferta, Activity context, RecyclerViewClickListenerHome itemListener)
     {
         this.oferta = oferta;
         this.context = context;
@@ -52,7 +49,7 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
 
     }
 
-    public RVAdapterHome(List<ResultProductsJson> oferta, Activity context, RecyclerViewClickListenerHome itemListener, boolean horizontal)
+    public RVAdapterMapProducts(List<Product> oferta, Activity context, RecyclerViewClickListenerHome itemListener, boolean horizontal)
     {
         this.oferta = oferta;
         this.context = context;
@@ -60,20 +57,10 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
         this.inflater = LayoutInflater.from(context);
         this.horizontal = horizontal;
 
-    }
-
-    public RVAdapterHome(List<ResultProductsJson> oferta, Activity context, RecyclerViewClickListenerHome itemListener, boolean horizontal, boolean showLike)
-    {
-        this.oferta = oferta;
-        this.context = context;
-        this.itemListener = itemListener;
-        this.inflater = LayoutInflater.from(context);
-        this.horizontal = horizontal;
-        this.showLikeButton = showLike;
     }
 
     @Override
-    public RVAdapterHome.OfertaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RVAdapterMapProducts.OfertaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int resourse = 0;
         if(!horizontal)
             resourse = R.layout.home_recycler_layout;
@@ -88,86 +75,60 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
         return ovh;
     }
 
-    private void loadImage(ImageView img, String url,final ProgressBar pbar)
+    private void loadImage(ImageView img, String url, final ProgressBar pbar)
     {
-        if(url != null && !url.isEmpty())
-        {
-            Picasso.with(context)
-                    .load(url)
-                    .fit()
-                    .placeholder(R.color.colorAccent)
-                    .error(R.color.colorAccent)
-                    .into(img, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            pbar.setVisibility(View.INVISIBLE);
-                        }
+        Picasso.with(context)
+                .load(url)
+                .fit()
+                .placeholder(R.color.colorAccent)
+                .error(R.color.colorAccent)
+                .into(img, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        pbar.setVisibility(View.INVISIBLE);
+                    }
 
-                        @Override
-                        public void onError() {
-                            pbar.setVisibility(View.INVISIBLE);
-                        }
-                    });
-        }else
-        {
-            Picasso.with(context)
-                    .load(R.color.colorAccent)
-                    .fit()
-                    .placeholder(R.color.colorAccent)
-                    .error(R.color.colorAccent)
-                    .into(img, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            pbar.setVisibility(View.INVISIBLE);
-                        }
-
-                        @Override
-                        public void onError() {
-                            pbar.setVisibility(View.INVISIBLE);
-                        }
-                    });
-        }
-
+                    @Override
+                    public void onError() {
+                        pbar.setVisibility(View.INVISIBLE);
+                    }
+                });
     }
 
 
 
     @Override
-    public void onBindViewHolder(final RVAdapterHome.OfertaViewHolder holder, final int position) {
+    public void onBindViewHolder(final RVAdapterMapProducts.OfertaViewHolder holder, final int position) {
 
-        ResultProductsJson obj = oferta.get(position);
+        Product obj = oferta.get(position);
 
         if(obj!= null)
         {
 
-            if(showLikeButton)
-                holder.imgLiket.setVisibility(View.VISIBLE);
+            //  holder.precio.setText(oferta.get(position).getPrecio());
 
-          //  holder.precio.setText(oferta.get(position).getPrecio());
+            if(obj.getName()!= null)
+                holder.descripcion.setText(obj.getName());
 
-            if(obj.getCommerceAddress() != null)
-                holder.descripcion.setText(obj.getProducts().get(0).getName());
+            if(obj.getDescription() != null)
+                holder.titulo.setText(obj.getDescription());
 
-            if(obj.getCommerceName() != null)
-                holder.titulo.setText(obj.getCommerceName());
-
-            String url = "";
-            if(oferta.get(position).getProducts().get(0).getImages() != null && oferta.get(position).getProducts().get(0).getImages().size() > 0)
-                url = oferta.get(position).getProducts().get(0).getImages().get(0);
-
-            oferta.get(position).setOferDisplay(0);
-
-            holder.pb.getIndeterminateDrawable().setColorFilter(context.getResources().getColor(R.color.purpleBixi2), PorterDuff.Mode.MULTIPLY);
-            holder.pb.setVisibility(View.VISIBLE);
-
-            loadImage(holder.imageView,url,holder.pb);
-            holder.tvBixiPoints.setText(oferta.get(position).getProducts().get(0).getPoints());
-
-            if(oferta.get(position).getProducts().get(0).getIsFavorite())
+            if(obj.getImages() != null && obj.getImages().size() > 0 && obj.getImages().get(0) != null)
             {
-                setLikes(holder.imgLiket,true);
+                String url = obj.getImages().get(0);
+                //   oferta.get(position).setOferDisplay(0);
+
+                holder.pb.getIndeterminateDrawable().setColorFilter(context.getResources().getColor(R.color.purpleBixi2), PorterDuff.Mode.MULTIPLY);
+                holder.pb.setVisibility(View.VISIBLE);
+
+                loadImage(holder.imageView,url,holder.pb);
+                holder.tvBixiPoints.setText(obj.getPoints());
+
+                holder.imgGoRight.setVisibility(View.INVISIBLE);
+                holder.imgGoLeft.setVisibility(View.INVISIBLE);
             }
 
+            /*
             final int posi = position;
 
             if(oferta.get(posi).getMaxquantityOffers() == 1)
@@ -190,19 +151,9 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
                         currentPosition ++;
                         holder.pb.setVisibility(View.VISIBLE);
                         holder.descripcion.setText(oferta.get(posi).getProducts().get(currentPosition).getName());
-
-                        if(oferta.get(posi).getProducts().get(currentPosition).getIsFavorite())
-                            setLikes(holder.imgLiket,true);
-                        else
-                            setLikes(holder.imgLiket,false);
-
-                        if(oferta.get(posi).getProducts().get(currentPosition).getImages() != null && oferta.get(posi).getProducts().get(currentPosition).getImages().size() > 0)
-                            loadImage(holder.imageView,oferta.get(posi).getProducts().get(currentPosition).getImages().get(0),holder.pb);
-                        else
-                            loadImage(holder.imageView,null,holder.pb);
-
+                        loadImage(holder.imageView,oferta.get(posi).getProducts().get(currentPosition).getImages().get(0),holder.pb);
                         oferta.get(position).setOferDisplay(currentPosition);
-                        holder.tvBixiPoints.setText(oferta.get(posi).getProducts().get(currentPosition).getPoints());
+                        holder.tvBixiPoints.setText(oferta.get(posi).getProducts().get(currentPosition).getPoints()+"B");
 
                         if(oferta.get(position).getOferDisplay() == oferta.get(position).getMaxquantityOffers() - 1)
                         {
@@ -227,19 +178,9 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
                         currentPosition --;
                         holder.pb.setVisibility(View.VISIBLE);
                         holder.descripcion.setText(oferta.get(posi).getProducts().get(currentPosition).getName());
-
-                        if(oferta.get(posi).getProducts().get(currentPosition).getIsFavorite())
-                            setLikes(holder.imgLiket,true);
-                        else
-                            setLikes(holder.imgLiket,false);
-
-                        if(oferta.get(posi).getProducts().get(currentPosition).getImages() != null && oferta.get(posi).getProducts().get(currentPosition).getImages().size() > 0)
-                            loadImage(holder.imageView,oferta.get(posi).getProducts().get(currentPosition).getImages().get(0),holder.pb);
-                        else
-                            loadImage(holder.imageView,null,holder.pb);
-
+                        loadImage(holder.imageView,oferta.get(posi).getProducts().get(currentPosition).getImages().get(0),holder.pb);
                         oferta.get(position).setOferDisplay(currentPosition);
-                        holder.tvBixiPoints.setText(oferta.get(posi).getProducts().get(currentPosition).getPoints());
+                        holder.tvBixiPoints.setText(oferta.get(posi).getProducts().get(currentPosition).getPoints()+"B");
 
                         if(oferta.get(position).getOferDisplay() == 0)
                         {
@@ -259,21 +200,7 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
             holder.imgLiket.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    int supPosi = oferta.get(position).getOferDisplay();
-                    if(oferta.get(posi).getProducts().get(supPosi).getIsFavorite())
-                    {
-                        oferta.get(posi).getProducts().get(supPosi).setIsFavorite("0");
-                        setLikes(holder.imgLiket,false);
-                        itemListener.recyclerViewLiketItem(v,position,oferta.get(position),false);
-                    }else
-                    {
-                        oferta.get(posi).getProducts().get(supPosi).setIsFavorite("1");
-                        setLikes(holder.imgLiket,true);
-                        itemListener.recyclerViewLiketItem(v,position,oferta.get(position),true);
-                    }
-
-
+                    itemListener.recyclerViewLiketItem(v,position,oferta.get(position));
                 }
             });
 
@@ -283,17 +210,11 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
                     itemListener.recyclerViewListClicked(v,position,oferta.get(posi));
                 }
             });
+             */
         }
-        holder.bind(oferta.get(position));
 
-    }
+        holder.bind(obj);
 
-    private void setLikes(ImageView imageView, boolean likeIt)
-    {
-        if(likeIt)
-            imageView.setImageResource(R.mipmap.likeit);
-        else
-            imageView.setImageResource(R.drawable.heart_outline);
     }
 
     private void updateArrows(ImageView img, boolean show)
@@ -345,7 +266,7 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
         ProgressBar pb;
 
 
-        private ResultProductsJson resultProductsJson;
+        private Product resultProductsJson;
 
 
         @BindView(R.id.tvTitulo)
@@ -356,7 +277,7 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
             ButterKnife.bind(this, itemView);
         }
 
-        public void bind(ResultProductsJson item) {
+        public void bind(Product item) {
             resultProductsJson = item;
             // Update the ViewHolder to the item's specifications.
         }
@@ -364,9 +285,9 @@ public class RVAdapterHome extends RecyclerView.Adapter<RVAdapterHome.OfertaView
         @Override
         public void onClick(View v) {
 
+          //  itemListener.recyclerViewListClicked(v,this.getLayoutPosition(),resultProductsJson);
             itemListener.recyclerViewListClicked(v,this.getLayoutPosition(),resultProductsJson);
         }
     }
 
 }
-

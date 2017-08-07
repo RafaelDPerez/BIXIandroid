@@ -11,6 +11,7 @@ import com.bixi.bixi.Network.Injector;
 import com.bixi.bixi.Pojos.Result;
 import com.bixi.bixi.Pojos.UpdateUserInfoPojo;
 import com.bixi.bixi.Pojos.UserLogin;
+import com.bixi.bixi.Views.EditProfileActivity;
 import com.bixi.bixi.Views.HomeFragment;
 import com.bixi.bixi.Views.HomeProfileFragment;
 
@@ -21,12 +22,20 @@ import com.bixi.bixi.Views.HomeProfileFragment;
 public class HomeProfilePresenterImpl implements HomeProfilePresenter, OnHomeProfileFinishListener,onResetPasswordFinishListener {
 
     HomeProfileFragment view;
+    EditProfileActivity viewEdit;
     HomeProfileInteractor interactor;
     ResetPasswordInteractor interactor2;
 
     public HomeProfilePresenterImpl(HomeProfileFragment view)
     {
         this.view = view;
+        interactor = new HomeProfileInteractorImpl(Injector.provideCreateUserService());
+        interactor2 = new ResetPasswordInteractorImpl(Injector.provideCreateUserService());
+    }
+
+    public HomeProfilePresenterImpl(EditProfileActivity view)
+    {
+        this.viewEdit = view;
         interactor = new HomeProfileInteractorImpl(Injector.provideCreateUserService());
         interactor2 = new ResetPasswordInteractorImpl(Injector.provideCreateUserService());
     }
@@ -53,31 +62,62 @@ public class HomeProfilePresenterImpl implements HomeProfilePresenter, OnHomePro
         pojo.setEmail(email);
         pojo.setGender(userInfo.getGender());
         pojo.setBirthDate(userInfo.getBirth_date());
+        pojo.setPhone1(userInfo.getPhone1());
         pojo.setPhone2(userInfo.getPhone2());
-        pojo.setImage(userInfo.getImage());
+        if(userInfo.getImage() != null)
+            pojo.setImage(userInfo.getImage());
         interactor2.updateUserInformationFromServer(token,pojo,this);
+
+        if(viewEdit != null)
+            viewEdit.showProgress();
 
     }
 
     @Override
     public void userInformationLoadFromServerSuccessfully(UserLogin userObj) {
-        view.hideProgress();
-        view.operacionExitosa(userObj);
+        if(view != null)
+        {
+            view.hideProgress();
+            view.operacionExitosa(userObj);
+        }
+
     }
 
     @Override
     public void userInformationLoadFromServerError() {
-        view.hideProgress();
-        view.error();
+        if(view != null)
+        {
+            view.hideProgress();
+            view.error();
+        }
+
     }
 
     @Override
     public void informationUpdatedSuccesfully(String msg) {
 
+        if(viewEdit != null)
+        {
+            viewEdit.hideProgress();
+            viewEdit.actualizadoExitoso();
+        }
+        if(view != null)
+        {
+            view.hideProgress();
+            view.actualizadoExitoso();
+        }
     }
 
     @Override
     public void error(String msg) {
-
+        if(viewEdit != null)
+        {
+            viewEdit.hideProgress();
+        }
+        if(view != null)
+        {
+            view.hideProgress();
+            view.actualizadoExitoso();
+        }
     }
 }

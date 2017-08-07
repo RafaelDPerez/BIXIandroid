@@ -10,6 +10,7 @@ public class OffersPointsClaim {
     private String product_id;
     private String description;
     private int points;
+    private String qr;
 
     public OffersPointsClaim() {
     }
@@ -44,5 +45,13 @@ public class OffersPointsClaim {
 
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    public String getQr() {
+        return qr;
+    }
+
+    public void setQr(String qr) {
+        this.qr = qr;
     }
 }

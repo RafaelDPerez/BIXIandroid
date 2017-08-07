@@ -1,6 +1,7 @@
 package com.bixi.bixi.Views;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -22,6 +23,7 @@ import com.bixi.bixi.Adaptadores.RVAdapterHomeLikeIt;
 import com.bixi.bixi.Interfaces.HomePresenter;
 import com.bixi.bixi.Interfaces.HomeView;
 import com.bixi.bixi.Interfaces.RecyclerViewClickListenerHome;
+import com.bixi.bixi.Pojos.ObjSearchProducts.Product;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsJson;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsLiketItJson;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ResultProductsJson;
@@ -62,6 +64,7 @@ public class HomeLikeIt extends Fragment implements HomeView,RecyclerViewClickLi
     private String token;
     private ArrayList<ResultProductsLikerItJson> resultProductsLikerItJson;
     private RVAdapterHomeLikeIt adapter;
+    private static int DETAIL_REQUEST = 2;
 
     public HomeLikeIt() {
         // Required empty public constructor
@@ -164,14 +167,13 @@ public class HomeLikeIt extends Fragment implements HomeView,RecyclerViewClickLi
     @Override
     public void onResume() {
         super.onResume();
-    //    presenter.cargarProductosFavoritosFromServer(token);
+        presenter.cargarProductosFavoritosFromServer(token);
     }
 
     @Override
     public void operacionExitosaLikeItFromServer(ProductsLiketItJson productsLiketItJson) {
         if(productsLiketItJson.getResult() != null)
             resultProductsLikerItJson = (ArrayList<ResultProductsLikerItJson>) productsLiketItJson.getResult();
-
 
         adapter = new RVAdapterHomeLikeIt(resultProductsLikerItJson,getInstance().getActivity(),this);
         rv.setAdapter(adapter);
@@ -199,6 +201,11 @@ public class HomeLikeIt extends Fragment implements HomeView,RecyclerViewClickLi
     }
 
     @Override
+    public void recyclerViewListClicked(View v, int position, Product product) {
+
+    }
+
+    @Override
     public void recyclerViewClicked(View v, int position) {
         ResultProductsLikerItJson obj = getItem(position);
         String url = "";
@@ -211,6 +218,9 @@ public class HomeLikeIt extends Fragment implements HomeView,RecyclerViewClickLi
         i.putExtra("url",url);
         i.putExtra("detalle",obj.getDescription());
         i.putExtra("bixiPoints",obj.getPoints());
+        i.putExtra("product_id",obj.getProductId());
+        i.putExtra("likeIt",true);
+        i.putExtra("offerDisplay",0);
         String[] selItemArray = new String[obj.getImages().size()];
         for(int x = 0;x<obj.getImages().size();x++)
         {
@@ -227,7 +237,20 @@ public class HomeLikeIt extends Fragment implements HomeView,RecyclerViewClickLi
             startActivity(i,activityOptionsCompat.toBundle());
         }else
         */
-            startActivity(i);
+            startActivityForResult(i,DETAIL_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == DETAIL_REQUEST && resultCode == Activity.RESULT_OK)
+        {
+            if(data.getBooleanExtra("changes",false)) {
+
+                resultProductsLikerItJson.clear();
+                presenter.cargarProductosFavoritosFromServer(token);
+            }
+        }
     }
 
     @Override
@@ -239,7 +262,7 @@ public class HomeLikeIt extends Fragment implements HomeView,RecyclerViewClickLi
     }
 
     @Override
-    public void recyclerViewLiketItem(View v, int position, ResultProductsJson resultProductsJson) {
+    public void recyclerViewLiketItem(View v, int position, ResultProductsJson resultProductsJson, boolean likeIt) {
 
     }
 }

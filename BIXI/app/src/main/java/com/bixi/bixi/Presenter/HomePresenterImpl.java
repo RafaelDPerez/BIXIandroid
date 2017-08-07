@@ -18,6 +18,8 @@ import com.bixi.bixi.Views.HomeLikeIt;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Created by Johnny Gil Mejia on 1/5/2017.
  */
@@ -68,19 +70,18 @@ public class HomePresenterImpl implements HomePresenter, OnHomeOfertasFinishList
     }
 
     @Override
-    public void cargarProductsFromServer(String search) {
+    public void cargarProductsFromServer(String token, String search) {
         if(view != null)
             view.showProgress();
         if(viewMaps != null)
             viewMaps.showProgress();
-
         ProductsSearch obj = new ProductsSearch();
         obj.setSearch("");
-        iteractor.loadProductsFromServer(obj,this);
+        iteractor.loadProductsFromServer(token, obj,this);
     }
 
     @Override
-    public void cargarProductsFromServer(String search, String ubicacionId, String ordenarPor, String isOffer, int pointFrom, int pointTo) {
+    public void cargarProductsFromServer(String token, String search, String ubicacionId, String ordenarPor, String isOffer, int pointFrom, int pointTo) {
         if(view != null)
             view.showProgress();
         if(viewMaps != null)
@@ -94,7 +95,32 @@ public class HomePresenterImpl implements HomePresenter, OnHomeOfertasFinishList
         obj.setIs_ofer(isOffer);
         obj.setPoint_to(pointTo);
         obj.setPoint_from(pointFrom);
-        iteractor.loadProductsFromServer(obj,this);
+        iteractor.loadProductsFromServer(token,obj,this);
+    }
+
+    @Override
+    public void cargarProductsFromServer(String token, String search, String ubicacionId, String ordenarPor, String isOffer, int pointFrom, int pointTo, double latitued, double longitud) {
+        if(view != null)
+            view.showProgress();
+        if(viewMaps != null)
+            viewMaps.showProgress();
+
+        ProductsSearch obj = new ProductsSearch();
+        if(!search.isEmpty())
+            obj.setSearch(search);
+        if(ubicacionId != null && !ubicacionId.equals("") && !ubicacionId.equals("-999"))
+            obj.setType_commerce_id(Integer.valueOf(ubicacionId));
+        if(!ordenarPor.isEmpty())
+            obj.setOrder_by(ordenarPor);
+        if(!isOffer.isEmpty())
+            obj.setIs_ofer(isOffer);
+        if(pointTo > 0)
+            obj.setPoint_to(pointTo);
+        if(pointFrom > 0)
+            obj.setPoint_from(pointFrom);
+        obj.setLat((float) latitued);
+        obj.setLng((float) longitud);
+        iteractor.loadProductsFromServer(token, obj,this);
     }
 
     @Override
@@ -176,6 +202,7 @@ public class HomePresenterImpl implements HomePresenter, OnHomeOfertasFinishList
 
     @Override
     public void ofertasDislikeSuccesfully(boolean success, int position) {
-        viewLikeIt.updateRV(success,position);
+        if(viewLikeIt != null)
+            viewLikeIt.updateRV(success,position);
     }
 }

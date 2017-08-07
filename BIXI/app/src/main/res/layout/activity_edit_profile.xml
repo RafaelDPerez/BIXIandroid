@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.bixi.bixi.homeDrawable">
+    tools:context="com.bixi.bixi.Views.EditProfileActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -18,34 +18,18 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:gravity="center"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            android:weightSum="1">
-
+            app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <ImageView
-                android:id="@+id/logo"
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:layout_gravity="center"
                 android:contentDescription=""
-                android:visibility="gone"
                 android:src="@mipmap/logo2" />
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="18sp"
-
-                android:text="Transacciones"
-                android:layout_weight="1.33" />
-
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_home_drawable" />
-    
+    <include layout="@layout/editprofile_layout"/>
 
 </android.support.design.widget.CoordinatorLayout>

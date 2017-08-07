@@ -7,4 +7,6 @@
     <color name="black">#000000</color>
     <color name="purpleBixi2">#68329a</color>
     <color name="purpleBixi">#88329a</color>
+    <color name="orangeBixi">#FF9100</color>
+    <color name="redBixi">#F44336</color>
 </resources>

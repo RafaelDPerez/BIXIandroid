@@ -80,6 +80,7 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
     private String token;
 
     static final int SEARCH_REQUEST = 1;
+    static final int DETAIL_REQUEST = 2;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -146,7 +147,7 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
       //  inicializarFab();
         onClickFabs();
 
-        presenter.cargarProductsFromServer("botella");
+        presenter.cargarProductsFromServer(token,"botella");
         swipeRefreshRV();
 
     }
@@ -186,7 +187,7 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
     }
 
    private void refreshItems() {
-       presenter.cargarProductsFromServer("botella");
+       presenter.cargarProductsFromServer(token,"botella");
     }
 
 
@@ -200,7 +201,7 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
     @Override
     public void onResume() {
         super.onResume();
-
+        presenter.cargarProductsFromServer(token,"botella");
     }
 
     private void onClickFabs()
@@ -258,7 +259,7 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
         Activity contex = getInstance().getActivity();
         if(contex == null)
             contex = getInstance().getActivity();
-        RVAdapterHome adapter = new RVAdapterHome(result,contex,this);
+        RVAdapterHome adapter = new RVAdapterHome(result,contex,this,false,true);
         rv.setAdapter(adapter);
 
 
@@ -283,11 +284,16 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
         int posiSubOfert = obj.getOferDisplay();
         Intent i = new Intent(getInstance().getActivity(),DetailActivity.class);
         i.putExtra("nombre",obj.getProducts().get(posiSubOfert).getName());
-        i.putExtra("url",obj.getProducts().get(posiSubOfert).getImages().get(0));
+        if(obj.getProducts().get(posiSubOfert).getImages() != null && obj.getProducts().get(posiSubOfert).getImages().size() > 0)
+            i.putExtra("url",obj.getProducts().get(posiSubOfert).getImages().get(0));
+        else
+            i.putExtra("url","");
+
         i.putExtra("detalle",obj.getProducts().get(posiSubOfert).getDescription());
         i.putExtra("bixiPoints",obj.getProducts().get(posiSubOfert).getPoints());
         i.putExtra("product_id",obj.getProducts().get(posiSubOfert).getProductId());
         i.putExtra("offerDisplay",posiSubOfert);
+        i.putExtra("likeIt",obj.getProducts().get(posiSubOfert).getIsFavorite());
 
         String[] selItemArray = new String[obj.getProducts().get(posiSubOfert).getImages().size()];
         for(int x = 0;x<obj.getProducts().get(posiSubOfert).getImages().size();x++)
@@ -305,7 +311,12 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
             startActivity(i,activityOptionsCompat.toBundle());
         }else
         */
-            startActivity(i);
+            startActivityForResult(i,DETAIL_REQUEST);
+
+    }
+
+    @Override
+    public void recyclerViewListClicked(View v, int position, Product product) {
 
     }
 
@@ -320,12 +331,18 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
     }
 
     @Override
-    public void recyclerViewLiketItem(View v, int position, ResultProductsJson resultProductsJson) {
+    public void recyclerViewLiketItem(View v, int position, ResultProductsJson resultProductsJson, boolean likeIt) {
         if(token != null && !token.equals(""))
         {
             ResultProductsJson obj = resultProductsJson;
             int posiSubOfert = obj.getOferDisplay();
-            presenter.likeProductsFromServer(token,obj.getProducts().get(posiSubOfert).getProductId(),position);
+
+            if(likeIt)
+                presenter.likeProductsFromServer(token,obj.getProducts().get(posiSubOfert).getProductId(),position);
+            else
+                presenter.dislikeProductsFromServer(token,obj.getProducts().get(posiSubOfert).getProductId(),position);
+
+
         }else {
             alertaToken();
         }
@@ -345,6 +362,7 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
             if(resultCode == Activity.RESULT_OK)
             {
                 presenter.cargarProductsFromServer(
+                        token,
                         data.getStringExtra("search"),
                         data.getStringExtra("ubicacionId"),
                         data.getStringExtra("ordenar"),
@@ -352,6 +370,10 @@ public class HomeFragment extends Fragment implements HomeView,RecyclerViewClick
                         data.getIntExtra("pointFrom",10),
                         data.getIntExtra("pointTo",300));
             }
+        }else if(requestCode == DETAIL_REQUEST && resultCode == Activity.RESULT_OK)
+        {
+            if(data.getBooleanExtra("changes",false))
+                presenter.cargarProductsFromServer(token,"botella");
         }
     }
 

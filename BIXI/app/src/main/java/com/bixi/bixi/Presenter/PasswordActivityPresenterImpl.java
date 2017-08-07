@@ -6,6 +6,8 @@ import com.bixi.bixi.Interfaces.PasswordActivityInteractor;
 import com.bixi.bixi.Interfaces.PasswordActivityPresenter;
 import com.bixi.bixi.Network.Injector;
 import com.bixi.bixi.Pojos.OffersPointsClaim;
+import com.bixi.bixi.Views.AddPointsActivity;
+import com.bixi.bixi.Views.DetailActivity;
 import com.bixi.bixi.Views.PasswordActivity;
 
 /**
@@ -15,6 +17,8 @@ import com.bixi.bixi.Views.PasswordActivity;
 public class PasswordActivityPresenterImpl implements PasswordActivityPresenter, OnFinishListener {
 
     PasswordActivity view;
+    DetailActivity viewDetail;
+    AddPointsActivity viewAdd;
     PasswordActivityInteractor interactor;
 
     public PasswordActivityPresenterImpl(PasswordActivity view)
@@ -23,14 +27,31 @@ public class PasswordActivityPresenterImpl implements PasswordActivityPresenter,
         this.interactor = new PasswordActivityInteractorImpl(Injector.provideCreateUserService());
     }
 
+    public PasswordActivityPresenterImpl(DetailActivity view)
+    {
+        this.viewDetail = view;
+        this.interactor = new PasswordActivityInteractorImpl(Injector.provideCreateUserService());
+    }
+
+    public PasswordActivityPresenterImpl(AddPointsActivity view)
+    {
+        this.viewAdd = view;
+        this.interactor = new PasswordActivityInteractorImpl(Injector.provideCreateUserService());
+    }
+
     @Override
     public void reclaimOffer(String token, OffersPointsClaim obj) {
-        view.showProgress();
+        if(view != null)
+            view.showProgress();
+        if(viewDetail != null)
+            viewDetail.showProgress();
         interactor.reclaimOffersFromServer(token,obj,this);
     }
 
     @Override
     public void addPointsOffer(String token, OffersPointsClaim onj) {
+        if(viewAdd != null)
+            viewAdd.showProgress();
         interactor.addPointOffersToServer(token,onj,this);
     }
 
@@ -46,6 +67,16 @@ public class PasswordActivityPresenterImpl implements PasswordActivityPresenter,
             view.hideProgress();
             view.exito(msg);
         }
+        if(viewDetail != null)
+        {
+            viewDetail.hideProgress();
+            viewDetail.exito(msg);
+        }
+        if(viewAdd != null)
+        {
+            viewAdd.hideProgress();
+            viewAdd.exito(msg);
+        }
 
     }
 
@@ -55,6 +86,16 @@ public class PasswordActivityPresenterImpl implements PasswordActivityPresenter,
         {
             view.hideProgress();
             view.error(msg);
+        }
+        if(viewDetail != null)
+        {
+            viewDetail.hideProgress();
+            viewDetail.exito(msg);
+        }
+        if(viewAdd != null)
+        {
+            viewAdd.hideProgress();
+            viewAdd.exito(msg);
         }
 
     }

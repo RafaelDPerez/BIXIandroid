@@ -2,6 +2,7 @@ package com.bixi.bixi.Interfaces;
 
 import android.view.View;
 
+import com.bixi.bixi.Pojos.ObjSearchProducts.Product;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ResultProductsJson;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ResultProductsLikerItJson;
 
@@ -11,7 +12,8 @@ import com.bixi.bixi.Pojos.ObjSearchProducts.ResultProductsLikerItJson;
 
 public interface RecyclerViewClickListenerHome {
     void recyclerViewListClicked(View v, int position, ResultProductsJson resultProductsJson);
+    void recyclerViewListClicked(View v, int position, Product product);
     void recyclerViewClicked(View v, int position);
     void recyclerViewRemoveItem(View v, int position);
-    void recyclerViewLiketItem(View v, int position, ResultProductsJson  resultProductsJson);
+    void recyclerViewLiketItem(View v, int position, ResultProductsJson  resultProductsJson, boolean likeIt);
 }

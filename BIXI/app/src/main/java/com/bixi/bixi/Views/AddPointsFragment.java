@@ -118,6 +118,7 @@ public class AddPointsFragment extends Fragment {
 
     private void inflateCustomLayout()
     {
+
         if(getInstance() != null && getInstance().getActivity() != null)
         {
             int QRcodeWidth = 500;

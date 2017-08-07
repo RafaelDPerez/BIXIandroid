@@ -41,7 +41,7 @@ public interface UserService {
     Call<UserLogin> postAttempLogin_Social(@Body UserSimple user);
 
     @POST("search_products")
-    Call<ProductsJson> postProdcuts(@Body ProductsSearch productsSearch);
+    Call<ProductsJson> postProdcuts(@Header("X-Request-Id") String token, @Body ProductsSearch productsSearch);
 
     @GET("user")
     Call<UserLogin> getUserInformation(@Header("X-Request-Id") String token);
