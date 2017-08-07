@@ -19,7 +19,12 @@
     <string name="error_passwordNotMatch">Las contraseñas no coinciden</string>
 
     <string name="aceptar">Aceptar</string>
+    <string name="bixiSymbol">B</string>
+    <string name="bixiQuantity">0</string>
     <string name="cancel">Cancel</string>
+    <string name="mapsTitulo">Ofertas Cerca de Mi</string>
+
+    <string name="buscar">Buscar</string>
 
     <string name="faltanCampos">Favor completar todos los campos del formulario.</string>
 

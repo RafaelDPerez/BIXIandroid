@@ -24,12 +24,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bixi.bixi.Adaptadores.RVAdapterMenu;
 import com.bixi.bixi.Interfaces.RecyclerViewClickListener;
 import com.bixi.bixi.Pojos.SimpleMenuPojo;
 import com.bixi.bixi.Utility.Constants;
+import com.bixi.bixi.Views.AddPointsActivity;
 import com.bixi.bixi.Views.AddPointsFragment;
 import com.bixi.bixi.Views.HomeActivity;
 import com.bixi.bixi.Views.HomeFragment;
@@ -53,14 +56,22 @@ public class homeDrawable extends AppCompatActivity
     private HomeProfileFragment homeProfileFragment;
     public static Fragment actual_Fragment = null;
     private String token;
+    private Toolbar toolbar;
+    private ImageView imgLogo;
+    private TextView tvTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_drawable);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
+        imgLogo = (ImageView) toolbar.findViewById(R.id.logo);
+        tvTitle = (TextView) toolbar.findViewById(R.id.title);
+
+        imgLogo.setVisibility(View.GONE);
+
         SharedPreferences prefs =
                 getSharedPreferences(Constants.appPreferences, Context.MODE_PRIVATE);
        token = prefs.getString("token", "");
@@ -260,6 +271,12 @@ public class homeDrawable extends AppCompatActivity
     private void launchHistorical() {
         if(!(actual_Fragment instanceof TransaccionesFragment))
         {
+            if(tvTitle != null)
+                tvTitle.setVisibility(View.VISIBLE);
+
+            if(imgLogo != null)
+                imgLogo.setVisibility(View.GONE);
+
             FragmentTransaction ft;
             TransaccionesFragment fg = TransaccionesFragment.getInstance();
             fg.setRetainInstance(false);
@@ -276,6 +293,21 @@ public class homeDrawable extends AppCompatActivity
 
     private void getFragmentAddPoints() {
 
+
+        if(tvTitle != null)
+            tvTitle.setVisibility(View.GONE);
+
+        if(imgLogo != null)
+            imgLogo.setVisibility(View.VISIBLE);
+
+        SharedPreferences prefs =
+                getSharedPreferences(Constants.appPreferences, Context.MODE_PRIVATE);
+        String token = prefs.getString("token", "");
+        Intent myIntent = new Intent(this, AddPointsActivity.class);
+        myIntent.putExtra(Constants.extraToken,token);
+        startActivity(myIntent);
+
+        /*
         if(!(actual_Fragment instanceof AddPointsFragment))
         {
             FragmentTransaction ft;
@@ -288,12 +320,19 @@ public class homeDrawable extends AppCompatActivity
             actual_Fragment = fg;
             ft.replace(R.id.details,fg);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.commit();
+            ft.commit()
         }
+        */
     }
 
     private void launchMapsActivity()
     {
+        if(tvTitle != null)
+            tvTitle.setVisibility(View.GONE);
+
+        if(imgLogo != null)
+            imgLogo.setVisibility(View.VISIBLE);
+
         SharedPreferences prefs =
                 getSharedPreferences(Constants.appPreferences, Context.MODE_PRIVATE);
         String token = prefs.getString("token", "");
@@ -319,6 +358,12 @@ public class homeDrawable extends AppCompatActivity
     {
         if(!(actual_Fragment instanceof HomeLikeIt))
         {
+            if(tvTitle != null)
+                tvTitle.setVisibility(View.GONE);
+
+            if(imgLogo != null)
+                imgLogo.setVisibility(View.VISIBLE);
+
             FragmentTransaction ft;
             HomeLikeIt fg = HomeLikeIt.getInstance();
             fg.setRetainInstance(false);
@@ -337,6 +382,12 @@ public class homeDrawable extends AppCompatActivity
     {
         if(!(actual_Fragment instanceof HomeFragment))
         {
+            if(tvTitle != null)
+                tvTitle.setVisibility(View.GONE);
+
+            if(imgLogo != null)
+                imgLogo.setVisibility(View.VISIBLE);
+
             FragmentTransaction ft;
             homeFragment = HomeFragment.getInstance();
             homeFragment.setRetainInstance(false);
@@ -356,6 +407,12 @@ public class homeDrawable extends AppCompatActivity
     {
         if(!(actual_Fragment instanceof  HomeProfileFragment))
         {
+            if(tvTitle != null)
+                tvTitle.setVisibility(View.GONE);
+
+            if(imgLogo != null)
+                imgLogo.setVisibility(View.VISIBLE);
+
             FragmentTransaction ft;
             homeProfileFragment = HomeProfileFragment.getInstance();
             homeProfileFragment.setRetainInstance(false);

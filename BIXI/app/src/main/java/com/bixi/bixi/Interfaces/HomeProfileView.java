@@ -11,4 +11,5 @@ public interface HomeProfileView {
     void error();
     void showProgress();
     void hideProgress();
+    void actualizadoExitoso();
 }

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -36,9 +37,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bixi.bixi.Adaptadores.RVAdapterHome;
+import com.bixi.bixi.Adaptadores.RVAdapterMapProducts;
 import com.bixi.bixi.Interfaces.HomePresenter;
 import com.bixi.bixi.Interfaces.HomeView;
 import com.bixi.bixi.Interfaces.RecyclerViewClickListenerHome;
+import com.bixi.bixi.Pojos.ObjSearchProducts.Product;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsJson;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ProductsLiketItJson;
 import com.bixi.bixi.Pojos.ObjSearchProducts.ResultProductsJson;
@@ -51,9 +54,16 @@ import com.bixi.bixi.Views.SearchActivity;
 import com.bixi.bixi.bixi.basics.ApplyCustomFont;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -76,6 +86,7 @@ import java.util.StringTokenizer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,HomeView,
         GoogleApiClient.ConnectionCallbacks,
@@ -95,12 +106,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     static final int SEARCH_REQUEST = 1;
     private String token;
     private Dialog d;
+    protected static final int REQUEST_CHECK_SETTINGS =54;
 
     @BindView(R.id.recyclerViewMaps)
     RecyclerView rv;
 
     @BindView(R.id.progressBar6)
     ProgressBar bar;
+
+    private Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +140,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         presenter = new HomePresenterImpl(this);
+        activity = this;
+        ApplyCustomFont.applyFont(this,findViewById(R.id.father),"fonts/Corbel.ttf");
     }
 
 
@@ -174,12 +190,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .build());
 
         rv.setHasFixedSize(true);
-        rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+        rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         bar.setVisibility(View.GONE);
         rv.setVisibility(View.VISIBLE);
         bar.getIndeterminateDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY);
-        presenter.cargarProductsFromServer("");
+
 
         mMap = googleMap;
 
@@ -222,7 +238,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public boolean onMarkerClick(Marker arg0) {
                 if(arg0 != null && arg0.equals(myMarker)); // if marker  source is clicked
                     inflateCustomLayout(arg0.getSnippet());
-                return true;
+                return false;
             }
 
         });
@@ -236,6 +252,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .addApi(LocationServices.API)
                 .build();
         mGoogleApiClient.connect();
+
+
     }
 
     private void inflateCustomLayout(String tag)
@@ -244,6 +262,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if(resultProductsJsons.get(position) != null)
         {
+            RVAdapterMapProducts adapter = new RVAdapterMapProducts(resultProductsJsons.get(position).getProducts(),this,this,true);
+            rv.setAdapter(adapter);
+
+            /*
             resultProductsJsons.get(position).setOferDisplay(0);
             String url = "";
             if(resultProductsJsons.get(position).getProducts().get(0).getImages() != null && resultProductsJsons.get(position).getProducts().get(0).getImages().size() > 0);
@@ -401,6 +423,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             ApplyCustomFont.applyFont(this,d.findViewById(R.id.home_recycler_id_dif),"fonts/Corbel.ttf");
 
             d.show();
+
+            */
         }
 
     }
@@ -490,6 +514,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     MarkerOptions markerOptions = new MarkerOptions()
                             .icon(BitmapDescriptorFactory.fromBitmap(iconFactory.makeIcon(String.valueOf(cantidadOfertas))))
                             .position(new LatLng(latitud, longitud))
+                            .title(resultProductsJsons.get(i).getCommerceName())
                             .snippet(String.valueOf(i))
                             .anchor(iconFactory.getAnchorU(), iconFactory.getAnchorV());
 
@@ -504,7 +529,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-        RVAdapterHome adapter = new RVAdapterHome(resultProductsJsons,this,this,true);
+        RVAdapterMapProducts adapter = new RVAdapterMapProducts(resultProductsJsons.get(0).getProducts(),this,this,true);
         rv.setAdapter(adapter);
     }
 
@@ -534,6 +559,50 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+
+        builder.setAlwaysShow(true);
+
+
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                final LocationSettingsStates state = result.getLocationSettingsStates();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        // All location settings are satisfied. The client can initialize location
+                        // requests here.
+                        startLocationRequest();
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied. But could be fixed by showing the user
+                        // a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            status.startResolutionForResult(activity, REQUEST_CHECK_SETTINGS );
+                        } catch (IntentSender.SendIntentException e) {
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way to fix the
+                        // settings so we won't show the dialog.
+                        break;
+                }
+            }
+        });
+
+
+    }
+
+    private void startLocationRequest()
+    {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -567,6 +636,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
+
+        Timber.d("Cargar from server: Location Change");
+
+        presenter.cargarProductsFromServer(token,"","","","",0,0,location.getLatitude(),location.getLongitude());
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
@@ -648,13 +721,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         {
             if(resultCode == Activity.RESULT_OK)
             {
+                Timber.d("Cargar from server: On Result");
+
                 presenter.cargarProductsFromServer(
+                        token,
                         data.getStringExtra("search"),
                         data.getStringExtra("ubicacionId"),
                         data.getStringExtra("ordenar"),
                         data.getStringExtra("isOffer"),
                         data.getIntExtra("pointFrom",10),
                         data.getIntExtra("pointTo",300));
+
+            }
+        }else if(requestCode == REQUEST_CHECK_SETTINGS)
+        {
+            if(resultCode == Activity.RESULT_OK)
+            {
+                startLocationRequest();
+            }else if(resultCode == Activity.RESULT_CANCELED)
+            {
+
             }
         }
     }
@@ -704,6 +790,32 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
+    public void recyclerViewListClicked(View v, int position, Product product) {
+        Product obj = product;
+   //     int posiSubOfert = obj.getOferDisplay();
+        Intent i = new Intent(MapsActivity.this,DetailActivity.class);
+        i.putExtra("nombre",obj.getName());
+        if(obj.getImages() != null && obj.getImages().size() > 0 && obj.getImages().get(0) != null)
+            i.putExtra("url",obj.getImages().get(0));
+        else
+            i.putExtra("url","");
+        i.putExtra("detalle",obj.getDescription());
+        i.putExtra("bixiPoints",obj.getPoints());
+        i.putExtra("product_id",obj.getProductId());
+        i.putExtra("likeIt",obj.getIsFavorite());
+   //     i.putExtra("offerDisplay",posiSubOfert);
+
+        String[] selItemArray = new String[obj.getImages().size()];
+        for(int x = 0;x<obj.getImages().size();x++)
+        {
+            selItemArray[x] = obj.getImages().get(x);
+        }
+        i.putExtra("arrayImages",selItemArray);
+        i.putExtra(Constants.extraToken,token);
+        startActivity(i);
+    }
+
+    @Override
     public void recyclerViewClicked(View v, int position) {
 
     }
@@ -714,12 +826,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void recyclerViewLiketItem(View v, int position, ResultProductsJson resultProductsJson) {
+    public void recyclerViewLiketItem(View v, int position, ResultProductsJson resultProductsJson, boolean likeIt) {
         if(token != null && !token.equals(""))
         {
             ResultProductsJson obj = resultProductsJson;
             int posiSubOfert = obj.getOferDisplay();
-            presenter.likeProductsFromServer(token,obj.getProducts().get(posiSubOfert).getProductId(),position);
+
+            if(likeIt)
+                presenter.likeProductsFromServer(token,obj.getProducts().get(posiSubOfert).getProductId(),position);
+            else
+                presenter.dislikeProductsFromServer(token,obj.getProducts().get(posiSubOfert).getProductId(),position);
         }else {
             alertaToken();
         }

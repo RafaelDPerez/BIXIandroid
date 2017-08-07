@@ -6,7 +6,7 @@ package com.bixi.bixi.Utility;
 
 public class Constants {
 
-    public static String url = "http://rubycom.net/bocetos/DEMO-BIXI/restserver/";
+    public static String url = "http://api.bixiloyalty.com/restserver/";
     public static String appPreferences = "BixiPreference";
     public static String extraToken = "token";
 }

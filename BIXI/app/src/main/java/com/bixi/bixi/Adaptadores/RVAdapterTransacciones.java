@@ -56,8 +56,16 @@ public class RVAdapterTransacciones extends  RecyclerView.Adapter<RVAdapterTrans
                 holder.tvDescripcion.setText(obj.getDescription());
             if(obj.getCommerceName() != null)
                 holder.tvName.setText(obj.getCommerceName());
-            if(obj.getPoints() != null)
-                holder.tvPoints.setText(obj.getPoints());
+            if(obj.getPoints() != null) {
+                if(obj.getType().equals("DEBITO")) {
+                    holder.tvPoints.setText("-" + obj.getPoints());
+                    holder.tvPoints.setTextColor(context.getResources().getColor(R.color.redBixi));
+                }
+                if(obj.getType().equals("CREDITO")) {
+                    holder.tvPoints.setText("+" + obj.getPoints());
+                    holder.tvPoints.setTextColor(context.getResources().getColor(R.color.com_facebook_blue));
+                }
+            }
         }
     }
 

@@ -11,7 +11,7 @@ import com.bixi.bixi.Pojos.Result;
 
 public interface HomeInteractor {
     void buscarOferta(OnHomeOfertasFinishListener listener);
-    void loadProductsFromServer(ProductsSearch productsSearch,OnHomeOfertasFinishListener listener);
+    void loadProductsFromServer(String token,ProductsSearch productsSearch,OnHomeOfertasFinishListener listener);
     void loadProductsFavoritosFromServer(String token,OnHomeOfertasFinishListener listener);
     void likeOffer(String token, ResultProductsLikerItJson obj,OnHomeOfertasFinishListener listener, int position);
     void dislikeOffer(String token, ResultProductsLikerItJson obj,OnHomeOfertasFinishListener listener,int position);

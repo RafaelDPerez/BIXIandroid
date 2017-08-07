@@ -51,6 +51,15 @@
                 android:id="@+id/imageView2" />
 
             <ImageView
+                android:id="@+id/imageViewShare"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="right|top"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="48dp"
+                app:srcCompat="@drawable/share_variant" />
+
+            <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 app:srcCompat="@drawable/chevron_right"
@@ -69,7 +78,7 @@
                 android:id="@+id/tvBixiPoints"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#8888"
+                android:background="#99000000"
                 android:gravity="center"
                 android:padding="4dp"
                 android:text="TextView"

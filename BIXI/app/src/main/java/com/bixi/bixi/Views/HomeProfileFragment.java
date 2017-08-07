@@ -175,6 +175,14 @@ public class HomeProfileFragment extends Fragment implements HomeProfileView, Ge
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(presenter != null && token != null && !token.isEmpty())
+        {
+            presenter.getUserInformation(token);
+        }
+    }
 
     private void buttonOnClick()
     {
@@ -239,6 +247,17 @@ public class HomeProfileFragment extends Fragment implements HomeProfileView, Ge
         }
     }
 
+    @OnClick(R.id.btnEditarPerfil)
+    void editarPerfil()
+    {
+        Intent i = new Intent(getActivity(), EditProfileActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("value", information);
+        i.putExtras(bundle);
+        i.putExtra("token",token);
+        startActivity(i);
+    }
+
     private byte[] convertBitmapToByte(Bitmap bitmap)
     {
         Bitmap bmp = bitmap;
@@ -256,7 +275,7 @@ public class HomeProfileFragment extends Fragment implements HomeProfileView, Ge
             if(information.getFirst_name() != null)
                 tvProfileName.setText(information.getFirst_name());
             if(information.getBalance_points() != null)
-                tvProfileBixiPoints.setText(information.getBalance_points() + "B");
+                tvProfileBixiPoints.setText(information.getBalance_points());
             if(information.getEmail() != null)
                 tvProfileCorreo.setText(information.getEmail());
             if(information.getGender() != null)
@@ -265,7 +284,7 @@ public class HomeProfileFragment extends Fragment implements HomeProfileView, Ge
                 tvProfileTelefono.setText(information.getPhone1());
             if(information.getBirth_date() != null)
                 tvProfileFechaNacimiento.setText(information.getBirth_date());
-            if(information.getImage() != null) {
+            if(information.getImage() != null && !information.getImage().equals("")) {
                 pbProfile.setVisibility(View.VISIBLE);
                 Glide.with(getInstance().getActivity()).load(information.getImage()).dontAnimate().centerCrop().placeholder(R.color.colorAccent)
                         .listener(new RequestListener<String, GlideDrawable>() {
@@ -322,5 +341,13 @@ public class HomeProfileFragment extends Fragment implements HomeProfileView, Ge
     public void hideProgress() {
         constraintLayout.setVisibility(View.VISIBLE);
             pb.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void actualizadoExitoso() {
+        if(presenter != null && token != null && !token.isEmpty())
+        {
+            presenter.getUserInformation(token);
+        }
     }
 }

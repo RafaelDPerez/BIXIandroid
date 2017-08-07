@@ -57,22 +57,44 @@ public class RVAdapterHomeLikeIt extends RecyclerView.Adapter<RVAdapterHomeLikeI
 
     private void loadImage(ImageView img, String url,final ProgressBar pbar)
     {
-        Picasso.with(context)
-                .load(url)
-                .fit()
-                .placeholder(R.color.colorAccent)
-                .error(R.color.colorAccent)
-                .into(img, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        pbar.setVisibility(View.INVISIBLE);
-                    }
+        if(url != null)
+        {
+            Picasso.with(context)
+                    .load(url)
+                    .fit()
+                    .placeholder(R.color.colorAccent)
+                    .error(R.color.colorAccent)
+                    .into(img, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            pbar.setVisibility(View.INVISIBLE);
+                        }
 
-                    @Override
-                    public void onError() {
-                        pbar.setVisibility(View.INVISIBLE);
-                    }
-                });
+                        @Override
+                        public void onError() {
+                            pbar.setVisibility(View.INVISIBLE);
+                        }
+                    });
+        }else
+        {
+            Picasso.with(context)
+                    .load(R.color.colorAccent)
+                    .fit()
+                    .placeholder(R.color.colorAccent)
+                    .error(R.color.colorAccent)
+                    .into(img, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            pbar.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onError() {
+                            pbar.setVisibility(View.INVISIBLE);
+                        }
+                    });
+        }
+
     }
 
 
@@ -91,11 +113,13 @@ public class RVAdapterHomeLikeIt extends RecyclerView.Adapter<RVAdapterHomeLikeI
             if(obj.getImages() != null && obj.getImages().size() > 0)
                 loadImage(holder.imageView,obj.getImages().get(0),holder.pb);
             else
-                loadImage(holder.imageView,"http://static.viagrupo.com/userupload/vargas01-04.png",holder.pb);
+                loadImage(holder.imageView,null,holder.pb);
             holder.imgGoLeft.setVisibility(View.INVISIBLE);
             holder.imgGoRight.setVisibility(View.INVISIBLE);
 
             holder.imgLike.setImageResource(R.mipmap.likeit);
+
+            holder.imgLike.setVisibility(View.VISIBLE);
 
             holder.imgLike.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -104,7 +128,7 @@ public class RVAdapterHomeLikeIt extends RecyclerView.Adapter<RVAdapterHomeLikeI
                 }
             });
             if(obj.getPoints() != null)
-                holder.tvBixiPoints.setText(obj.getPoints()+"B");
+                holder.tvBixiPoints.setText(obj.getPoints());
 
         }
     }
