@@ -53,7 +53,7 @@
         app:layout_constraintTop_toBottomOf="@+id/spinnerUbicacion" />
 
     <TextView
-        android:text="Rango de BIXIS"
+        android:text="@string/rangoTixis"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/textView3"
@@ -84,7 +84,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <TextView
-        android:text="10B"
+        android:text="10T"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView4"
@@ -97,7 +97,7 @@
         app:layout_constraintTop_toBottomOf="@+id/seekBar" />
 
     <TextView
-        android:text="300B"
+        android:text="300T"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView5"
