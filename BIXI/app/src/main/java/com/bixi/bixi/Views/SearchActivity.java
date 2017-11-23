@@ -115,7 +115,7 @@ public class SearchActivity extends AppCompatActivity implements SearchActivityV
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 // TODO Auto-generated method stub
-                tvSeekBarMax.setText(tvSeekBarMax.getText()+"T");
+                tvSeekBarMax.setText(tvSeekBarMax.getText()+"B");
             }
         });
     }

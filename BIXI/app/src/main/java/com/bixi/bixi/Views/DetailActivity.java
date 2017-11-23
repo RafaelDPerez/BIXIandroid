@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -109,7 +108,7 @@ public class DetailActivity extends AppCompatActivity implements HomeView,Genera
             titulo.setText(extras.getString("nombre"));
             setImagen(extras.getString("url"));
             detalle.setText(extras.getString("detalle"));
-            tvBixiPoints.setText(extras.getString("bixiPoints")+"T");
+            tvBixiPoints.setText(extras.getString("bixiPoints")+"B");
             productId = extras.getString("product_id");
             token = extras.getString(Constants.extraToken);
             position = extras.getInt("offerDisplay",0);
@@ -303,8 +302,8 @@ public class DetailActivity extends AppCompatActivity implements HomeView,Genera
     {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Mira esta oferta de Tixi Loyalty");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, "http://tixiloyalty.com/detalle-oferta/"+productId);
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Mira esta oferta de Bixi Loyalty");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "http://bixiloyalty.com/detalle-oferta/"+productId);
             startActivity(Intent.createChooser(shareIntent, "Share link using"));
     }
 

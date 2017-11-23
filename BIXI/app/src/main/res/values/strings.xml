@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TIXI Loyalty</string>
+    <string name="app_name">BIXI Loyalty</string>
     <string name="email">email</string>
     <string name="contraseña">contraseña</string>
     <string name="olvidoContrasena">¿Olvidó su contraseña?</string>
@@ -18,9 +18,8 @@
     <string name="error">ERROR</string>
     <string name="error_passwordNotMatch">Las contraseñas no coinciden</string>
 
-    <string name="rangoTixis">Rango de TIXIS</string>
     <string name="aceptar">Aceptar</string>
-    <string name="bixiSymbol">T</string>
+    <string name="bixiSymbol">B</string>
     <string name="bixiQuantity">0</string>
     <string name="cancel">Cancel</string>
     <string name="mapsTitulo">Ofertas Cerca de Mi</string>
